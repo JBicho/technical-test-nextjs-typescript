@@ -3,10 +3,10 @@
 exports[`Test Search Input Component renders correctly and matches the snapshot 1`] = `
 <DocumentFragment>
   <div
-    class="sc-3134fa0a-0 laGSnx"
+    class="Styles__StyledContainer-r6tzcr-0 ksDtPp"
   >
     <label
-      class="sc-3134fa0a-2 hMoKSw"
+      class="Styles__StyledLabel-r6tzcr-2 kAjtzR"
       for="someID"
     >
       someLabel
@@ -14,7 +14,7 @@ exports[`Test Search Input Component renders correctly and matches the snapshot 
     <input
       aria-describedby="search-help-text"
       aria-label="Search input"
-      class="sc-3134fa0a-1 eZYfBK"
+      class="Styles__StyledSearchInput-r6tzcr-1 iHcdsp"
       id="someID"
       placeholder="somePlaceHolder"
       type="search"

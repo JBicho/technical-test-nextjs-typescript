@@ -1,12 +1,3 @@
-type Stats = {
-  hp: number;
-  attack: number;
-  defense: number;
-  special_attack: number;
-  special_defense: number;
-  speed: number;
-};
-
 interface Pokemon {
   id: number;
   name: string;
@@ -19,11 +10,4 @@ interface Pokemon {
   speed: number;
 }
 
-type PartialPokemonProperties = Pick<Pokemon, 'id' | 'name' | 'type'>;
-
-type PokemonTableItem = PartialPokemonProperties & {
-  stats: Stats;
-  power: number;
-};
-
-export type { Pokemon, PokemonTableItem };
+export type { Pokemon };

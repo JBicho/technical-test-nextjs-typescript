@@ -5,17 +5,70 @@ const createJestConfig = nextJest({
 });
 
 const customJestConfig = {
-  moduleDirectories: ['node_modules', '<rootDir>/'],
-  testEnvironment: 'jest-environment-jsdom',
+  setupFilesAfterEnv: ['<rootDir>/spec/setupTests.ts'],
+  moduleNameMapper: {
+    '^@/components/(.*)$': '<rootDir>/components/$1',
+    '^@/pages/(.*)$': '<rootDir>/pages/$1',
+    '^@/common/(.*)$': '<rootDir>/common/$1',
+    '^@/utils/(.*)$': '<rootDir>/common/utils/$1',
+  },
   collectCoverage: true,
-  collectCoverageFrom: [
-    'src/**/*.{ts,tsx}',
-    'components/**/*.{ts,tsx}',
-    'pages/**/*.{ts,tsx}',
-    '!**/*.spec.{ts,tsx}',
+  coverageDirectory: '<rootDir>/coverage',
+  coverageReporters: ['json', 'lcov', 'text', 'clover'],
+  projects: [
+    {
+      displayName: 'dom',
+      testEnvironment: 'jest-environment-jsdom',
+      testMatch: ['**/*.test.(ts|tsx)'],
+      testPathIgnorePatterns: [
+        '/node_modules/',
+        '/.next/',
+        '/*.api.test.(ts|tsx)',
+      ],
+      collectCoverageFrom: [
+        '<rootDir>/components/**/*.{ts,tsx}',
+        '<rootDir>/pages/**/*.{ts,tsx}',
+        '<rootDir>/common/**/*.{ts,tsx}',
+        '<rootDir>/utils/**/*.{ts,tsx}',
+        '!<rootDir>/api/**/*.{ts,tsx}',
+        '!<rootDir>/common/interfaces/**/*.{ts,ts}',
+        '!<rootDir>/common/utils/logger.ts',
+        '!<rootDir>/common/constants.ts',
+      ],
+      coverageThreshold: {
+        global: {
+          branches: 80,
+          functions: 80,
+          lines: 80,
+          statements: 80,
+        },
+      },
+    },
+    {
+      displayName: 'node',
+      testEnvironment: 'node',
+      testMatch: ['**/*.api.test.(ts|tsx)'],
+      testPathIgnorePatterns: ['/node_modules/', '/.next/'],
+      collectCoverageFrom: [
+        '<rootDir>/api/**/*.{ts,tsx}',
+        '<rootDir>/common/**/*.{ts,tsx}',
+        '!<rootDir>/components/**/*.{ts,tsx}',
+        '!<rootDir>/pages/**/*.{ts,tsx}',
+        '!<rootDir>/api/**/*.{ts,tsx}',
+        '!<rootDir>/common/interfaces/**/*.{ts,ts}',
+        '!<rootDir>/common/utils/logger.ts',
+        '!<rootDir>/common/constants.ts',
+      ],
+      coverageThreshold: {
+        global: {
+          branches: 80,
+          functions: 80,
+          lines: 80,
+          statements: 80,
+        },
+      },
+    },
   ],
-  coverageDirectory: 'coverage',
-  coverageReporters: ['text', 'html', 'lcov', 'json'],
 };
 
 module.exports = createJestConfig(customJestConfig);

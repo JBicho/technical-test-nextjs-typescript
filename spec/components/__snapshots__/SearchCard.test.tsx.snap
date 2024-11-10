@@ -6,16 +6,16 @@ exports[`Test Search Card Component should match snapshot with a mock page 1`] =
   "baseElement": <body>
     <div>
       <div
-        class="sc-5477665f-0 eHVTwR"
+        class="Styles__StyledCard-ystdse-0 eblGKo"
       >
         <div
-          class="sc-67d6c285-0 ddkiWA"
+          class="Styles__SearchInputContainer-chg8lq-0 gkIwXJ"
         >
           <div
-            class="sc-3134fa0a-0 laGSnx"
+            class="Styles__StyledContainer-r6tzcr-0 ksDtPp"
           >
             <label
-              class="sc-3134fa0a-2 hMoKSw"
+              class="Styles__StyledLabel-r6tzcr-2 kAjtzR"
               for="pokemon-name"
             >
               Search
@@ -23,17 +23,17 @@ exports[`Test Search Card Component should match snapshot with a mock page 1`] =
             <input
               aria-describedby="search-help-text"
               aria-label="Search input"
-              class="sc-3134fa0a-1 eZYfBK"
+              class="Styles__StyledSearchInput-r6tzcr-1 iHcdsp"
               id="pokemon-name"
               placeholder="Search a Pokemon Name"
               type="search"
             />
           </div>
           <div
-            class="sc-3134fa0a-0 laGSnx"
+            class="Styles__StyledContainer-r6tzcr-0 ksDtPp"
           >
             <label
-              class="sc-3134fa0a-2 hMoKSw"
+              class="Styles__StyledLabel-r6tzcr-2 kAjtzR"
               for="pokemon-power-treshold"
             >
               Power threshold
@@ -41,7 +41,7 @@ exports[`Test Search Card Component should match snapshot with a mock page 1`] =
             <input
               aria-describedby="search-help-text"
               aria-label="Search input"
-              class="sc-3134fa0a-1 eZYfBK"
+              class="Styles__StyledSearchInput-r6tzcr-1 iHcdsp"
               id="pokemon-power-treshold"
               placeholder="Write a Power Threshold"
               type="search"
@@ -49,7 +49,7 @@ exports[`Test Search Card Component should match snapshot with a mock page 1`] =
           </div>
         </div>
         <section
-          class="sc-5d04bb7b-0 iLyYNB"
+          class="Styles__StyledSection-sc-3x6sym-0 eodnVs"
         >
           <p
             aria-live="polite"
@@ -84,16 +84,16 @@ exports[`Test Search Card Component should match snapshot with a mock page 1`] =
   </body>,
   "container": <div>
     <div
-      class="sc-5477665f-0 eHVTwR"
+      class="Styles__StyledCard-ystdse-0 eblGKo"
     >
       <div
-        class="sc-67d6c285-0 ddkiWA"
+        class="Styles__SearchInputContainer-chg8lq-0 gkIwXJ"
       >
         <div
-          class="sc-3134fa0a-0 laGSnx"
+          class="Styles__StyledContainer-r6tzcr-0 ksDtPp"
         >
           <label
-            class="sc-3134fa0a-2 hMoKSw"
+            class="Styles__StyledLabel-r6tzcr-2 kAjtzR"
             for="pokemon-name"
           >
             Search
@@ -101,17 +101,17 @@ exports[`Test Search Card Component should match snapshot with a mock page 1`] =
           <input
             aria-describedby="search-help-text"
             aria-label="Search input"
-            class="sc-3134fa0a-1 eZYfBK"
+            class="Styles__StyledSearchInput-r6tzcr-1 iHcdsp"
             id="pokemon-name"
             placeholder="Search a Pokemon Name"
             type="search"
           />
         </div>
         <div
-          class="sc-3134fa0a-0 laGSnx"
+          class="Styles__StyledContainer-r6tzcr-0 ksDtPp"
         >
           <label
-            class="sc-3134fa0a-2 hMoKSw"
+            class="Styles__StyledLabel-r6tzcr-2 kAjtzR"
             for="pokemon-power-treshold"
           >
             Power threshold
@@ -119,7 +119,7 @@ exports[`Test Search Card Component should match snapshot with a mock page 1`] =
           <input
             aria-describedby="search-help-text"
             aria-label="Search input"
-            class="sc-3134fa0a-1 eZYfBK"
+            class="Styles__StyledSearchInput-r6tzcr-1 iHcdsp"
             id="pokemon-power-treshold"
             placeholder="Write a Power Threshold"
             type="search"
@@ -127,7 +127,7 @@ exports[`Test Search Card Component should match snapshot with a mock page 1`] =
         </div>
       </div>
       <section
-        class="sc-5d04bb7b-0 iLyYNB"
+        class="Styles__StyledSection-sc-3x6sym-0 eodnVs"
       >
         <p
           aria-live="polite"

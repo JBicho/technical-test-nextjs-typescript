@@ -1,8 +1,9 @@
-import { PokemonTableItem } from '../../common/interfaces/pokemon';
+import { Pokemon } from '../../common/interfaces/pokemon';
+import { calculatePokemonPower } from '../../common/utils/calculatePokemonPower';
 import { StyledTable, TableBody, TableFooter, TableHeader } from './Styles';
 
-interface TableProps {
-  pokemonList: PokemonTableItem[];
+export interface TableProps {
+  pokemonList: Pokemon[];
 }
 
 export const Table = ({ pokemonList = [] }: TableProps) => {
@@ -13,39 +14,27 @@ export const Table = ({ pokemonList = [] }: TableProps) => {
           <tr>
             <th>ID</th>
             <th>Name</th>
+            <th>Type</th>
             <th colSpan={6}>Stats</th>
             <th>Power</th>
           </tr>
         </TableHeader>
         <TableBody>
-          <tr>
-            <td>Data 1</td>
-            <td>Data 2</td>
-            <td>Data 2</td>
-            <td>Data 3</td>
-            <td>Data 3</td>
-            <td>Data 3</td>
-            <td>Data 3</td>
-            <td>Data 3</td>
-            <td>Data 3</td>
-          </tr>
-          <tr>
-            <td>Data 4</td>
-            <td>Data 4</td>
-            <td>Data 5</td>
-            <td>Data 6</td>
-            <td>Data 6</td>
-            <td>Data 6</td>
-            <td>Data 6</td>
-            <td>Data 6</td>
-            <td>Data 6</td>
-          </tr>
+          {pokemonList.map((pokemon, index) => (
+            <tr key={`${pokemon.name}${index}`}>
+              <td>{pokemon.id}</td>
+              <td>{pokemon.name}</td>
+              <td>{pokemon.type.join(', ')}</td>
+              <td>{pokemon.hp}</td>
+              <td>{pokemon.speed}</td>
+              <td>{pokemon.attack}</td>
+              <td>{pokemon.special_attack}</td>
+              <td>{pokemon.defense}</td>
+              <td>{pokemon.special_defense}</td>
+              <td>{calculatePokemonPower(pokemon)}</td>
+            </tr>
+          ))}
         </TableBody>
-        <TableFooter>
-          <tr>
-            <td colSpan={9}>Footer</td>
-          </tr>
-        </TableFooter>
       </StyledTable>
     </>
   );

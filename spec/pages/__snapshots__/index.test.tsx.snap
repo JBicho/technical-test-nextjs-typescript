@@ -1,0 +1,30 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`HomePage Component Should match snapshot 1`] = `
+<div>
+  <div
+    data-testid="mock-head"
+  >
+    <title>
+      Pokemon List
+    </title>
+    <meta
+      content="A simple Pokedex, Explore a list of Pokemons, search by name, and filter them by power threshold in this interactive Pokemon list app."
+      name="description"
+    />
+    <link
+      href="/favicon.ico"
+      rel="icon"
+    />
+  </div>
+  <h1>
+    Pokemon list
+  </h1>
+  <div
+    data-testid="mock-search-card"
+  />
+  <div
+    data-testid="mock-table"
+  />
+</div>
+`;

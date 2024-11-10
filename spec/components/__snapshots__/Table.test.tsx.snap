@@ -1,0 +1,101 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test Table Component Renders correctly and matches the snapshot 1`] = `
+<DocumentFragment>
+  <table
+    class="Styles__StyledTable-sc-1o1cw3u-0 UzSlY"
+  >
+    <thead
+      class="Styles__TableHeader-sc-1o1cw3u-1 jSvCgs"
+    >
+      <tr>
+        <th>
+          ID
+        </th>
+        <th>
+          Name
+        </th>
+        <th>
+          Type
+        </th>
+        <th
+          colspan="6"
+        >
+          Stats
+        </th>
+        <th>
+          Power
+        </th>
+      </tr>
+    </thead>
+    <tbody
+      class="Styles__TableBody-sc-1o1cw3u-2 jMVdeV"
+    >
+      <tr>
+        <td>
+          1
+        </td>
+        <td>
+          Bulbasaur
+        </td>
+        <td>
+          Grass, Water
+        </td>
+        <td>
+          45
+        </td>
+        <td>
+          46
+        </td>
+        <td>
+          49
+        </td>
+        <td>
+          65
+        </td>
+        <td>
+          48
+        </td>
+        <td>
+          67
+        </td>
+        <td>
+          100
+        </td>
+      </tr>
+      <tr>
+        <td>
+          2
+        </td>
+        <td>
+          Ivysaur
+        </td>
+        <td>
+          Poison, Fire
+        </td>
+        <td>
+          60
+        </td>
+        <td>
+          69
+        </td>
+        <td>
+          62
+        </td>
+        <td>
+          81
+        </td>
+        <td>
+          63
+        </td>
+        <td>
+          80
+        </td>
+        <td>
+          100
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</DocumentFragment>
+`;

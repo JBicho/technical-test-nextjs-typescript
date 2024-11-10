@@ -3,7 +3,7 @@
 exports[`Test Counter Component renders correctly and matches the snapshot 1`] = `
 <DocumentFragment>
   <section
-    class="sc-5d04bb7b-0 iLyYNB"
+    class="Styles__StyledSection-sc-3x6sym-0 eodnVs"
   >
     <p
       aria-live="polite"

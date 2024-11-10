@@ -1,13 +1,11 @@
 import Head from 'next/head';
 import { Pokemon } from '../common/interfaces/pokemon';
 import { Layout } from '../components/LayoutComponent/Layout';
-import { SearchInput } from '../components/SearchInput/SearchInput';
-import { Counter } from '../components/Counter/Counter';
-import { Card } from '../components/Card/Card';
-import { Table } from '../components/Table/Table';
 import { SearchCard } from '../components/SearchCard/SearchCard';
+import { Table } from '../components/Table/Table';
+import { logger } from '../common/utils/logger';
 
-const HomePage = ({ pokemons }: { pokemons: Pokemon[] }) => {
+const HomePage = ({ pokemonList }: { pokemonList: Pokemon[] }) => {
   return (
     <>
       <Head>
@@ -20,9 +18,22 @@ const HomePage = ({ pokemons }: { pokemons: Pokemon[] }) => {
       </Head>
       <h1>Pokemon list</h1>
       <SearchCard />
-      <Table pokemonList={[]}></Table>
+      <Table pokemonList={pokemonList}></Table>
     </>
   );
+};
+
+export const getServerSideProps = async (p0: Pokemon[]) => {
+  try {
+    const res = await fetch(`${process.env.BASE_URL}/api/pokemon`);
+    const data = await res.json();
+
+    return { props: { pokemonList: data as Pokemon[] } };
+  } catch (error) {
+    logger.error('Error while fetching Pokemon data');
+
+    return { notFound: true };
+  }
 };
 
 HomePage.getLayout = Layout;

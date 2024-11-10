@@ -3,13 +3,13 @@
 exports[`Test Layout Component should match snapshot with a mock page 1`] = `
 <DocumentFragment>
   <div
-    class="sc-f8e2d048-0 bQCGGJ"
+    class="Styles__Background-sc-1o8hx7p-0 dKNCZO"
   >
     <div
-      class="sc-f8e2d048-1 lbvEgI"
+      class="Styles__OverlayPattern-sc-1o8hx7p-1 kEikSX"
     />
     <nav
-      class="sc-f8e2d048-2 fPbujT"
+      class="Styles__Menu-sc-1o8hx7p-2 dkZqFh"
     >
       <a
         aria-label="Go to home page"
@@ -32,10 +32,10 @@ exports[`Test Layout Component should match snapshot with a mock page 1`] = `
       </a>
     </nav>
     <div
-      class="sc-f8e2d048-3 hYhOah"
+      class="Styles__Container-sc-1o8hx7p-3 iOvVmP"
     >
       <div
-        class="sc-f8e2d048-4 gSEfTz"
+        class="Styles__Main-sc-1o8hx7p-4 iwThyF"
       >
         <div>
           Mock Page Content
