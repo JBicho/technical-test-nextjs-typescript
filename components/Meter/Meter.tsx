@@ -1,6 +1,6 @@
 import { MeterContainer, StyledMeter } from './Styles';
 
-interface MeterProps {
+export interface MeterProps {
   id: string;
   value: number;
   label: string;

@@ -1,10 +1,10 @@
 import { ChangeEvent } from 'react';
 import { StyledContainer, StyledLabel, StyledSearchInput } from './Styles';
 
-interface SearchInputProps {
+export interface SearchInputProps {
   label: string;
   id: string;
-  placeholder?: string;
+  placeholder: string;
   onSearch: (input: string) => void;
 }
 

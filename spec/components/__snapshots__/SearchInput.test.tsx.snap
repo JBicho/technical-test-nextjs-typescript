@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test Search Input Component renders correctly and matches the snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="sc-3134fa0a-0 laGSnx"
+  >
+    <label
+      class="sc-3134fa0a-2 hMoKSw"
+      for="someID"
+    >
+      someLabel
+    </label>
+    <input
+      aria-describedby="search-help-text"
+      aria-label="Search input"
+      class="sc-3134fa0a-1 eZYfBK"
+      id="someID"
+      placeholder="somePlaceHolder"
+      type="search"
+    />
+  </div>
+</DocumentFragment>
+`;

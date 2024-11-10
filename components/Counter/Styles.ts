@@ -8,4 +8,9 @@ export const StyledSection = styled.section`
   p:last-of-type {
     margin-bottom: 0;
   }
+
+  strong {
+    display: inline-block;
+    text-indent: 10px;
+  }
 `;

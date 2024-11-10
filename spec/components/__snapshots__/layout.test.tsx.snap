@@ -1,0 +1,47 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test Layout Component should match snapshot with a mock page 1`] = `
+<DocumentFragment>
+  <div
+    class="sc-f8e2d048-0 bQCGGJ"
+  >
+    <div
+      class="sc-f8e2d048-1 lbvEgI"
+    />
+    <nav
+      class="sc-f8e2d048-2 fPbujT"
+    >
+      <a
+        aria-label="Go to home page"
+        href="/"
+      >
+        <img
+          alt="Pokeball Image"
+          data-nimg="1"
+          decoding="async"
+          height="96"
+          loading="lazy"
+          src="/_next/image?url=%2Fimages%2Fpokeball.png&w=256&q=75"
+          srcset="/_next/image?url=%2Fimages%2Fpokeball.png&w=96&q=75 1x, /_next/image?url=%2Fimages%2Fpokeball.png&w=256&q=75 2x"
+          style="color: transparent;"
+          width="96"
+        />
+        <span>
+          Home
+        </span>
+      </a>
+    </nav>
+    <div
+      class="sc-f8e2d048-3 hYhOah"
+    >
+      <div
+        class="sc-f8e2d048-4 gSEfTz"
+      >
+        <div>
+          Mock Page Content
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;

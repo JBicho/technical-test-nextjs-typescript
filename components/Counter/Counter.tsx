@@ -1,6 +1,6 @@
 import { StyledSection } from './Styles';
 
-interface CounterProps {
+export interface CounterProps {
   countOverThreshold: number;
   min: number;
   max: number;
@@ -15,24 +15,21 @@ export const Counter = ({
     <>
       <StyledSection>
         <p role="status" aria-live="polite">
-          Count over threshold:{' '}
+          Count over threshold:
           <span>
-            {' '}
-            <strong>{countOverThreshold}</strong>{' '}
+            <strong>{countOverThreshold}</strong>
           </span>
         </p>
         <p>
-          Min:{' '}
+          Min:
           <span>
-            {' '}
-            <strong>{min}</strong>{' '}
+            <strong>{min}</strong>
           </span>
         </p>
         <p>
-          Max:{' '}
+          Max:
           <span>
-            {' '}
-            <strong>{max}</strong>{' '}
+            <strong>{max}</strong>
           </span>
         </p>
       </StyledSection>

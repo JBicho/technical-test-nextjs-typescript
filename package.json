@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "test": "jest --watch",
+    "test:coverage": "npx jest --coverage",
     "format": "prettier --write .",
     "prepare": "husky",
     "format:check": "prettier --check .",

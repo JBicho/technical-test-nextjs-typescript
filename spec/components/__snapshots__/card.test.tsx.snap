@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test Card Component renders correctly and matches the snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="sc-5477665f-0 eHVTwR"
+  >
+    <p>
+      This is some content
+    </p>
+  </div>
+</DocumentFragment>
+`;
