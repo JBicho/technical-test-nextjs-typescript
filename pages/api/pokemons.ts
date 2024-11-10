@@ -2,7 +2,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import Pokemons from "./data/pokemon.json";
-import { Pokemon } from "../../interfaces/pokemon";
+import { Pokemon } from "../../common/interfaces/pokemon";
 
 export default async function handler(
   _req: NextApiRequest,
