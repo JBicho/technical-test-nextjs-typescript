@@ -1,5 +1,5 @@
-import { ChangeEvent } from "react";
-import { StyledContainer, StyledLabel, StyledSearchInput } from "./Styles";
+import { ChangeEvent } from 'react';
+import { StyledContainer, StyledLabel, StyledSearchInput } from './Styles';
 
 interface SearchInputProps {
   label: string;
@@ -11,7 +11,7 @@ interface SearchInputProps {
 export const SearchInput = ({
   label,
   id,
-  placeholder = "Search a parameter",
+  placeholder = 'Search a parameter',
   onSearch,
 }: SearchInputProps) => {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {

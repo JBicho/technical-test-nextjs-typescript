@@ -1,0 +1,27 @@
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
+  "eslint.alwaysShowStatus": true,
+  "prettier.requireConfig": true,
+  "files.autoSave": "onWindowChange",
+  "files.eol": "\n",
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "files.trimTrailingWhitespace": true,
+  "editor.renderWhitespace": "boundary",
+  "editor.rulers": [80],
+  "editor.wordWrap": "on",
+  "files.autoSaveDelay": 1000,
+  "search.useGlobalIgnoreFiles": false,
+  "git.enableSmartCommit": true,
+  "git.confirmSync": false,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "always"
+  }
+}

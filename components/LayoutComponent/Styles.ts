@@ -1,4 +1,4 @@
-import styled, { keyframes } from "styled-components";
+import styled, { keyframes } from 'styled-components';
 
 const gradientAnimation = keyframes`
   0% { background-position: 0% 50%; }
@@ -18,13 +18,13 @@ const Background = styled.div`
 `;
 
 const OverlayPattern = styled.div`
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url("https://www.transparenttextures.com/patterns/white-diamond.png");
+  background-image: url('https://www.transparenttextures.com/patterns/white-diamond.png');
   opacity: 0.05;
   pointer-events: none;
 `;

@@ -1,5 +1,5 @@
-import { PokemonTableItem } from "../../common/interfaces/pokemon";
-import { StyledTable, TableBody, TableFooter, TableHeader } from "./Styles";
+import { PokemonTableItem } from '../../common/interfaces/pokemon';
+import { StyledTable, TableBody, TableFooter, TableHeader } from './Styles';
 
 interface TableProps {
   pokemonList: PokemonTableItem[];

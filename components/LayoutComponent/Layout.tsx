@@ -1,7 +1,7 @@
-import type { ReactElement } from "react";
-import { Background, Container, Main, Menu, OverlayPattern } from "./Styles";
-import Image from "next/image";
-import Link from "next/link";
+import type { ReactElement } from 'react';
+import { Background, Container, Main, Menu, OverlayPattern } from './Styles';
+import Image from 'next/image';
+import Link from 'next/link';
 
 export const Layout = (page: ReactElement): JSX.Element => {
   return (
@@ -9,7 +9,7 @@ export const Layout = (page: ReactElement): JSX.Element => {
       <Background>
         <OverlayPattern />
         <Menu>
-          <Link href={"/"} aria-label="Go to home page">
+          <Link href={'/'} aria-label="Go to home page">
             <Image
               src="/images/pokeball.png"
               alt="Pokeball Image"

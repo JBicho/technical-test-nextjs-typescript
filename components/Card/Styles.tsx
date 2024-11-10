@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const StyledCard = styled.div`
   align-items: center;
@@ -10,5 +10,7 @@ export const StyledCard = styled.div`
   margin: var(--global-rhythm);
   width: 100%;
   max-width: 900px;
-  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  transition:
+    transform 0.3s ease-in-out,
+    box-shadow 0.3s ease-in-out;
 `;

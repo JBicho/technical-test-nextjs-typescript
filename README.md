@@ -22,7 +22,7 @@
 
 ## Introduction
 
-This project is a technical test for a job application at Gold Avenue. 
+This project is a technical test for a job application at Gold Avenue.
 The goal is to create a web application using Next.js and Typescript. The application must be able to display a list of pokemons and their details.
 
 - Fork this repository on your account
@@ -44,9 +44,8 @@ The goal is to create a web application using Next.js and Typescript. The applic
 
 #### Pokemon view
 
-- When you click on a row (pokemon in table), you must show this pokemon in a new page (Page pokemon ex: /pokemon/2344). You must show in this page, all properties of pokemon and this image (available in public/images folder). 
-A next button and a previous button must be display to access on previous or next pokemon (based on id logic).
-
+- When you click on a row (pokemon in table), you must show this pokemon in a new page (Page pokemon ex: /pokemon/2344). You must show in this page, all properties of pokemon and this image (available in public/images folder).
+  A next button and a previous button must be display to access on previous or next pokemon (based on id logic).
 
 #### Unit test
 

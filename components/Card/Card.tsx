@@ -1,5 +1,5 @@
-import { ReactNode } from "react";
-import { StyledCard } from "./Styles";
+import { ReactNode } from 'react';
+import { StyledCard } from './Styles';
 
 interface CardProps {
   children: ReactNode;

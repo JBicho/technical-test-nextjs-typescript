@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 const StyledTable = styled.table`
   width: 100%;
@@ -14,7 +14,7 @@ const StyledTable = styled.table`
 
 const TableHeader = styled.thead`
   background: rgba(255, 255, 255, 0.15);
-  
+
   th {
     padding: calc(var(--global-rhythm) / 1.5);
     font-weight: 600;

@@ -1,4 +1,4 @@
-import { MeterContainer, StyledMeter } from "./Styles";
+import { MeterContainer, StyledMeter } from './Styles';
 
 interface MeterProps {
   id: string;
@@ -8,7 +8,7 @@ interface MeterProps {
   min?: number;
 }
 
-export const Meter = ({ id, value, label, max, min=0 }: MeterProps) => {
+export const Meter = ({ id, value, label, max, min = 0 }: MeterProps) => {
   return (
     <MeterContainer>
       <label htmlFor={id}>{label}</label>

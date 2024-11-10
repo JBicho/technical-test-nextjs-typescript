@@ -1,17 +1,17 @@
-import Head from "next/head";
-import Image from "next/image";
-import { Pokemon } from "../../common/interfaces/pokemon";
-import { Card } from "../../components/Card/Card";
-import { Layout } from "../../components/LayoutComponent/Layout";
-import { Meter } from "../../components/Meter/Meter";
+import Head from 'next/head';
+import Image from 'next/image';
+import { Pokemon } from '../../common/interfaces/pokemon';
+import { Card } from '../../components/Card/Card';
+import { Layout } from '../../components/LayoutComponent/Layout';
+import { Meter } from '../../components/Meter/Meter';
 import {
   DetailView,
   DetailViewNavigation,
   Details,
   ImageContainer,
   TypesList,
-} from "./Styles";
-import { MAX_METER_VALUE } from "../../common/constants";
+} from './Styles';
+import { MAX_METER_VALUE } from '../../common/constants';
 
 const PokemonPage = (props: Pokemon) => {
   return (
@@ -42,7 +42,12 @@ const PokemonPage = (props: Pokemon) => {
               ))}
             </TypesList>
 
-            <Meter id="hp-meter" label="HP" value={props.hp} max={MAX_METER_VALUE} />
+            <Meter
+              id="hp-meter"
+              label="HP"
+              value={props.hp}
+              max={MAX_METER_VALUE}
+            />
             <Meter
               id="attack-meter"
               label="Attack"
@@ -96,8 +101,8 @@ export async function getServerSideProps({
     // Implement new endpoint in /api/pokemon/[id].ts and use it here
     const pokemonExample: Pokemon = {
       id: id,
-      name: "Bulbasaur",
-      type: ["Grass", "Poison"],
+      name: 'Bulbasaur',
+      type: ['Grass', 'Poison'],
       hp: 45,
       attack: 49,
       defense: 49,

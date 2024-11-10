@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 const DetailView = styled.div`
   display: flex;
@@ -24,7 +24,9 @@ const ImageContainer = styled.div`
     border: 2px solid rgba(255, 255, 255, 0.3);
     background-color: rgba(255, 255, 255, 0.15);
     backdrop-filter: blur(10px) saturate(180%);
-    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    transition:
+      transform 0.3s ease-in-out,
+      box-shadow 0.3s ease-in-out;
 
     &:hover {
       transform: scale(1.1);
@@ -61,12 +63,12 @@ const TypesList = styled.ul`
   }
 
   li::after {
-    content: "/";
+    content: '/';
     margin-left: 5px;
   }
 
   li:last-child::after {
-    content: "";
+    content: '';
   }
 `;
 

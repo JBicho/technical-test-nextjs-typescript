@@ -19,7 +19,7 @@ interface Pokemon {
   speed: number;
 }
 
-type PartialPokemonProperties = Pick<Pokemon, "id" | "name" | "type">;
+type PartialPokemonProperties = Pick<Pokemon, 'id' | 'name' | 'type'>;
 
 type PokemonTableItem = PartialPokemonProperties & {
   stats: Stats;
