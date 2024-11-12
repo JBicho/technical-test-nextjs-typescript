@@ -1,49 +1,52 @@
-import winston from 'winston';
+type LogLevel = 'info' | 'error' | 'warn' | 'debug';
 
-const createLogger = () => {
-  if (typeof window !== 'undefined') {
-    return winston.createLogger({
-      level: 'info',
-      format: winston.format.combine(
-        winston.format.timestamp(),
-        winston.format.json()
-      ),
-      transports: [
-        new winston.transports.Console({
-          format: winston.format.simple(),
-        }),
-      ],
-    });
+interface LogMessage {
+  timestamp: string;
+  level: LogLevel;
+  message: string;
+  data?: unknown;
+}
+
+class Logger {
+  private isServer = typeof window === 'undefined';
+  private isDev = process.env.NODE_ENV === 'development';
+
+  private formatMessage(
+    level: LogLevel,
+    message: string,
+    data?: unknown
+  ): LogMessage {
+    return {
+      timestamp: new Date().toISOString(),
+      level,
+      message,
+      data,
+    };
   }
 
-  const logger = winston.createLogger({
-    level: 'info',
-    format: winston.format.combine(
-      winston.format.timestamp(),
-      winston.format.json()
-    ),
-    transports: [
-      new winston.transports.Console({
-        format: winston.format.simple(),
-      }),
-    ],
-  });
-
-  if (process.env.NODE_ENV === 'development') {
-    logger.add(
-      new winston.transports.File({
-        filename: 'logs/error.log',
-        level: 'error',
-      })
-    );
-    logger.add(
-      new winston.transports.File({
-        filename: 'logs/combined.log',
-      })
-    );
+  info(message: string, data?: unknown): void {
+    const logMessage = this.formatMessage('info', message, data);
+    if (this.isDev || this.isServer) {
+      console.log(JSON.stringify(logMessage, null, 2));
+    }
   }
 
-  return logger;
-};
+  error(message: string, data?: unknown): void {
+    const logMessage = this.formatMessage('error', message, data);
+    console.error(JSON.stringify(logMessage, null, 2));
+  }
 
-export const logger = createLogger();
+  warn(message: string, data?: unknown): void {
+    const logMessage = this.formatMessage('warn', message, data);
+    console.warn(JSON.stringify(logMessage, null, 2));
+  }
+
+  debug(message: string, data?: unknown): void {
+    if (this.isDev) {
+      const logMessage = this.formatMessage('debug', message, data);
+      console.debug(JSON.stringify(logMessage, null, 2));
+    }
+  }
+}
+
+export const logger = new Logger();

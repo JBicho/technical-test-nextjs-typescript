@@ -16,4 +16,4 @@
   NEXT_USE_NETLIFY_EDGE = "true"
   NEXT_SHARP_PATH = "/node_modules/sharp"
   POKEMON_DATA_PATH = "pages/api/data/pokemon.json"
-  BASE_URL = "https://gold-avenue-tech-challenge.netlify.app/" 
+  BASE_URL = "https://your-netlify-site.netlify.app"
