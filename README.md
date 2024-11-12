@@ -20,48 +20,27 @@
   </a>
 </p>
 
-## Introduction
-
-This project is a technical test for a job application at Gold Avenue. 
-The goal is to create a web application using Next.js and Typescript. The application must be able to display a list of Pokemons and their details.
-
-
-- Fork this repository on your account
-- Create a new branch
-- Open a pull request on the `main` branch
-- If possible, host the project on a platform like Vercel, Netlify, Heroku, etc. for easier review
-
-### Requirements
-
-#### Pokemon List
-
-- We want to see all the Pokemon on the page by default (You can use pagination if you think this would cause a performance issue).
-- We can search by name every Pokemon and you must show every Pokemon matched with the searched string.
-- Threshold Power field: When you put a value (pokemon power), you must update the count value and count every Pokemon with the power threshold. For example: if you put 319, you must return every Pokemon with power strictly above 319.
-- Count: must show the current count of pokemon returned by your search input and/or power threshold.
-- Min: you must return the minimum Pokemon power of the list. It must be worked with a search
-- Max: you must return the maximum Pokemon power of the list. It must be worked with a search
-  Example : [Search part](with-search.png) [Power threshold part](with-threshold.png).
-
-#### Pokemon view
-
-- When you click on a row (pokemon in table), you must show this Pokemon on a new page (Page pokemon ex: /pokemon/2344). You must show on this page, all properties of Pokemon and this image (available in the public/images folder). 
-A next button and a previous button must be displayed to access the previous or next Pokemon (based on ID logic).
-
-#### Unit test
-
-- Make unit tests on components, helpers, endpoint, ...
-
-## Getting Started
-
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
-
-[Page list pokemon](http://localhost:3000/) can be accessed on http://localhost:3000/.
-[Page pokemon](http://localhost:3000/pokemon/2344) can be accessed on http://localhost:3000/pokemon/2344.
-
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/pokemons](http://localhost:3000/api/pokemons). This endpoint can be edited in `pages/api/pokemons.ts`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+## The solution
+This solution follows the requirements of the project
+### Home Page
+- A list of Pokemons is displayed at first load coming from the respective api endpoint
+  - Said list is presented in a table that is navigatable through it's pages stopping at the last item or first accordingly
+  - The list is filterable by Pokemon name and power threshold
+### Detail Page
+- A detail page with the respective info and image of the clicked pokemon is accessible through the click on it's respective row
+- The details page has 2 buttons Next and Prev so that we can navigate the list based on pokemon id
+- Added a simple menu with a link to navigate back to the home page
+### Tech stack and CI/CD
+- The tech stack used is the one already established in the project Next.js / Styled components / Jest
+- I chose Netlify for the deployment due to already being familiar with it
+- The API has 2 enpoints one for search and data and another to get Pokemon info by id from the list provided
+- The app uses jest to the unit tests of the api and client app I aimed for a coverage above 80%(instructions below on how to run each set of tests)
+- Added a very simple pipeline with github actions that deploys the app to netlify after completing a set of steps
+  - lint
+  - Client App tests
+  - API tests
+  - Deploy
+- The app is deployed to netlify the link will be provided separately
 
 ### Install the dependencies
 
@@ -75,8 +54,14 @@ The `pages/api` directory is mapped to `/api/*`. Files in this directory are tre
 @user:~$ npm run dev
 ```
 
-### Test the project
+### Test the API
 
 ```bash
-@user:~$ npm run test
+@user:~$ npm run test:api
+```
+
+### Test the client app 
+
+```bash
+@user:~$ npm run test:client
 ```
