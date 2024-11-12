@@ -5,6 +5,10 @@ const nextConfig = {
   compiler: {
     styledComponents: true,
   },
+  images: {
+    domains: ['https://gold-avenue-tech-challenge.netlify.app/'],
+    unoptimized: true,
+  },
 };
 
 module.exports = nextConfig;
