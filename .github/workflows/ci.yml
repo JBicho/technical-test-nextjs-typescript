@@ -29,10 +29,10 @@ jobs:
         run: npm run lint
 
       - name: Run Client tests
-        run: npm run test:client
+        run: npm run test:client:ci
 
       - name: Run API test
-        run: npm run test:api
+        run: npm run test:api:ci
 
       - name: Build the project
         run: npm run build
