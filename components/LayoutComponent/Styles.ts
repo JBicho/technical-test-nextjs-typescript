@@ -46,6 +46,8 @@ const Menu = styled.nav`
     justify-content: flex-start;
 
     span {
+      display: flex;
+      align-items: center;
       margin-left: calc(var(--global-rhythm) / 2);
     }
   }

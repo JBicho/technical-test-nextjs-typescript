@@ -67,7 +67,7 @@ export const Table = ({
     }
   };
 
-  if (!pokemonList && router.isFallback) {
+  if (router.isFallback) {
     return <div>Loading...</div>;
   }
 

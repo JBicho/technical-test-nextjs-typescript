@@ -1,9 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Table Component renders correctly and matches the snapshot 1`] = `
+exports[`Test Table Component Should match snapshot with empty list 1`] = `
 <DocumentFragment>
   <table
-    class="Styles__StyledTable-sc-1o1cw3u-0 brXwnB"
+    class="Styles__StyledTable-sc-1o1cw3u-0 bKkKXR"
   >
     <thead
       class="Styles__TableHeader-sc-1o1cw3u-1 jSvCgs"
@@ -32,67 +32,11 @@ exports[`Table Component renders correctly and matches the snapshot 1`] = `
       class="Styles__TableBody-sc-1o1cw3u-2 fykNoR"
     >
       <tr>
-        <td>
-          1
-        </td>
-        <td>
-          Bulbasaur
-        </td>
-        <td>
-          Grass, Poison
-        </td>
-        <td>
-          45
-        </td>
-        <td>
-          41
-        </td>
-        <td>
-          49
-        </td>
-        <td>
-          65
-        </td>
-        <td>
-          55
-        </td>
-        <td>
-          61
-        </td>
-        <td>
-          100
-        </td>
-      </tr>
-      <tr>
-        <td>
-          2
-        </td>
-        <td>
-          Charmander
-        </td>
-        <td>
-          Fire
-        </td>
-        <td>
-          39
-        </td>
-        <td>
-          66
-        </td>
-        <td>
-          52
-        </td>
-        <td>
-          60
-        </td>
-        <td>
-          43
-        </td>
-        <td>
-          50
-        </td>
-        <td>
-          100
+        <td
+          class="Styles__EmptyListTd-sc-1o1cw3u-3 bgUgKv"
+          colspan="10"
+        >
+          No pokemon found
         </td>
       </tr>
     </tbody>
@@ -111,7 +55,104 @@ exports[`Table Component renders correctly and matches the snapshot 1`] = `
             </strong>
           </button>
           <span>
-            Page 1 of 3
+            Page 1 of 1
+          </span>
+          <button
+            disabled=""
+          >
+            <strong>
+              Next
+            </strong>
+          </button>
+        </td>
+      </tr>
+    </tfoot>
+  </table>
+</DocumentFragment>
+`;
+
+exports[`Test Table Component Should match snapshot with non empty list 1`] = `
+<DocumentFragment>
+  <table
+    class="Styles__StyledTable-sc-1o1cw3u-0 bKkKXR"
+  >
+    <thead
+      class="Styles__TableHeader-sc-1o1cw3u-1 jSvCgs"
+    >
+      <tr>
+        <th>
+          ID
+        </th>
+        <th>
+          Name
+        </th>
+        <th>
+          Type
+        </th>
+        <th
+          colspan="6"
+        >
+          Stats
+        </th>
+        <th>
+          Power
+        </th>
+      </tr>
+    </thead>
+    <tbody
+      class="Styles__TableBody-sc-1o1cw3u-2 fykNoR"
+    >
+      <tr
+        style="cursor: pointer;"
+      >
+        <td>
+          1
+        </td>
+        <td>
+          Pikachu
+        </td>
+        <td>
+          Electric
+        </td>
+        <td>
+          35
+        </td>
+        <td>
+          90
+        </td>
+        <td>
+          55
+        </td>
+        <td>
+          50
+        </td>
+        <td>
+          40
+        </td>
+        <td>
+          50
+        </td>
+        <td>
+          320
+        </td>
+      </tr>
+    </tbody>
+    <tfoot
+      class="Styles__TableFooter-sc-1o1cw3u-4 iiILBb"
+    >
+      <tr>
+        <td
+          colspan="10"
+        >
+          <button
+            disabled=""
+          >
+            <strong>
+              Prev
+            </strong>
+          </button>
+          <span>
+            Page 1 of 2
           </span>
           <button>
             <strong>

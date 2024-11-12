@@ -1,183 +1,233 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from '@testing-library/react';
 import { useRouter } from 'next/router';
-import { calculatePokemonPower } from '../../common/utils/calculatePokemonPower';
-import { Table, TableProps } from '../../components/Table/Table';
+import { Pokemon } from '../../common/interfaces/pokemon';
+import { Table } from '../../components/Table/Table';
 import '../setupTests';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(),
 }));
-jest.mock('../../common/utils/calculatePokemonPower');
 
 describe('Test Table Component', () => {
-  const mockPush = jest.fn();
-  const mockHandlePagination = jest.fn();
-
-  const defaultPaginationData = {
-    currentPage: 1,
-    totalPages: 3,
-    totalItems: 25,
-    itemsPerPage: 10,
-    hasNextPage: true,
-    hasPreviousPage: false,
-  };
-
   beforeEach(() => {
-    jest.clearAllMocks();
-    (useRouter as jest.Mock).mockReturnValue({ push: mockPush });
-    (calculatePokemonPower as jest.Mock).mockReturnValue(100);
+    (useRouter as jest.Mock).mockReturnValue({
+      isFallback: false,
+      push: jest.fn(),
+    });
   });
 
-  const defaultProps: TableProps = {
-    pokemonList: [
+  it('Should match snapshot with empty list', () => {
+    const paginationData = {
+      currentPage: 1,
+      hasNextPage: false,
+      hasPreviousPage: false,
+      itemsPerPage: 10,
+      totalItems: 0,
+      totalPages: 1,
+    };
+
+    const { asFragment } = render(
+      <Table
+        pokemonList={[]}
+        paginationData={paginationData}
+        handlePagination={() => {}}
+      />
+    );
+
+    expect(asFragment()).toMatchSnapshot();
+  });
+
+  it('Should match snapshot with non empty list', () => {
+    const handlePagination = jest.fn();
+
+    const paginationData = {
+      currentPage: 1,
+      hasNextPage: true,
+      hasPreviousPage: false,
+      itemsPerPage: 10,
+      totalItems: 20,
+      totalPages: 2,
+    };
+
+    const pokemonList = [
       {
         id: 1,
-        name: 'Bulbasaur',
-        type: ['Grass', 'Poison'],
-        hp: 45,
-        attack: 49,
-        defense: 55,
-        special_attack: 65,
-        special_defense: 61,
-        speed: 41,
+        name: 'Pikachu',
+        type: ['Electric'],
+        hp: 35,
+        attack: 55,
+        defense: 40,
+        special_attack: 50,
+        special_defense: 50,
+        speed: 90,
       },
-    ],
-    paginationData: defaultPaginationData,
-    handlePagination: mockHandlePagination,
-  };
+    ];
 
-  const setupComponent = (props = defaultProps) => render(<Table {...props} />);
+    const { asFragment } = render(
+      <Table
+        pokemonList={pokemonList}
+        paginationData={paginationData}
+        handlePagination={handlePagination}
+      />
+    );
 
-  describe('Basic Rendering', () => {
-    it('Renders table headers correctly', () => {
-      setupComponent();
-      expect(screen.getByText('ID')).toBeInTheDocument();
-      expect(screen.getByText('Name')).toBeInTheDocument();
-      expect(screen.getByText('Type')).toBeInTheDocument();
-      expect(screen.getByText('Stats')).toBeInTheDocument();
-      expect(screen.getByText('Power')).toBeInTheDocument();
-    });
-
-    it('Renders pokemon data correctly', () => {
-      setupComponent();
-      expect(screen.getByText('Bulbasaur')).toBeInTheDocument();
-      expect(screen.getByText('Grass, Poison')).toBeInTheDocument();
-      expect(screen.getByText('100')).toBeInTheDocument();
-    });
-
-    it('Renders empty state when no pokemon are found', () => {
-      setupComponent({
-        ...defaultProps,
-        pokemonList: [],
-      });
-      expect(screen.getByText('No pokemon found')).toBeInTheDocument();
-    });
+    expect(asFragment()).toMatchSnapshot();
   });
 
-  describe('Edge Cases', () => {
-    it('Handles Pokemon with empty type array', () => {
-      setupComponent({
-        ...defaultProps,
-        pokemonList: [
-          {
-            ...defaultProps.pokemonList[0],
-            type: [],
-          },
-        ],
+  it('Should handle row click and navigate', async () => {
+    const mockPush = jest.fn();
+
+    (useRouter as jest.Mock).mockReturnValue({
+      push: mockPush,
+      isFallback: false,
+    });
+
+    const pokemonList = [
+      {
+        id: 1,
+        name: 'Pikachu',
+        type: ['Electric'],
+        hp: 35,
+        speed: 90,
+        attack: 55,
+        special_attack: 50,
+        defense: 40,
+        special_defense: 50,
+      },
+    ];
+
+    const paginationData = {
+      currentPage: 1,
+      hasNextPage: true,
+      hasPreviousPage: false,
+      itemsPerPage: 10,
+      totalItems: 1,
+      totalPages: 1,
+    };
+
+    const handlePagination = jest.fn();
+
+    render(
+      <Table
+        pokemonList={pokemonList}
+        paginationData={paginationData}
+        handlePagination={handlePagination}
+      />
+    );
+
+    const row = screen.getByText('Pikachu').closest('tr');
+
+    if (row) {
+      await act(async () => {
+        fireEvent.click(row);
       });
+    } else {
+      throw new Error('Row not found');
+    }
 
-      const row = screen.getByText('Bulbasaur').closest('tr');
-
-      expect(row).toBeInTheDocument();
-
-      const typeTd = row!.querySelectorAll('td')[2];
-
-      expect(typeTd.textContent).toBe('');
-    });
-
-    it('Handles Pokemon with single type correctly', () => {
-      setupComponent({
-        ...defaultProps,
-        pokemonList: [
-          {
-            ...defaultProps.pokemonList[0],
-            type: ['Fire'],
-          },
-        ],
-      });
-
-      expect(screen.getByText('Fire')).toBeInTheDocument();
-    });
-
-    it('Handles Pokemon with multiple types correctly', () => {
-      setupComponent();
-
-      expect(screen.getByText('Grass, Poison')).toBeInTheDocument();
-    });
-  });
-
-  describe('Pagination', () => {
-    it('Disables previous button on first page', () => {
-      setupComponent();
-
-      const prevButton = screen.getByText('Prev').closest('button');
-
-      expect(prevButton).toBeDisabled();
-    });
-
-    it('Enables next button when hasNextPage is true', () => {
-      setupComponent();
-
-      const nextButton = screen.getByText('Next').closest('button');
-
-      expect(nextButton).not.toBeDisabled();
-    });
-
-    it('Shows correct page information', () => {
-      setupComponent();
-
-      expect(
-        screen.getByText(
-          `Page ${defaultPaginationData.currentPage} of ${defaultPaginationData.totalPages}`
-        )
-      ).toBeInTheDocument();
-    });
-
-    it('Calls handlePagination with correct page number', () => {
-      setupComponent();
-
-      const nextButton = screen.getByText('Next').closest('button');
-
-      fireEvent.click(nextButton!);
-
-      expect(mockHandlePagination).toHaveBeenCalledWith(2);
-    });
-  });
-
-  describe('Navigation', () => {
-    it('Navigates to pokemon detail page when row is clicked', () => {
-      setupComponent();
-
-      const row = screen.getByText('Bulbasaur').closest('tr');
-
-      fireEvent.click(row!);
-
+    await waitFor(() => {
       expect(mockPush).toHaveBeenCalledWith('/pokemon/1');
     });
   });
 
-  describe('Power Calculation', () => {
-    it('Calls calculatePokemonPower with correct parameters', () => {
-      setupComponent();
+  it('Should handle page change and trigger pagination', async () => {
+    const handlePagination = jest.fn();
 
-      expect(calculatePokemonPower).toHaveBeenCalledWith({
-        attack: defaultProps.pokemonList[0].attack,
-        defense: defaultProps.pokemonList[0].defense,
-        hp: defaultProps.pokemonList[0].hp,
-        special_attack: defaultProps.pokemonList[0].special_attack,
-        special_defense: defaultProps.pokemonList[0].special_defense,
-        speed: defaultProps.pokemonList[0].speed,
-      });
+    const paginationData = {
+      currentPage: 1,
+      hasNextPage: true,
+      hasPreviousPage: false,
+      itemsPerPage: 10,
+      totalItems: 20,
+      totalPages: 2,
+    };
+
+    const pokemonList = [
+      {
+        id: 1,
+        name: 'Pikachu',
+        type: ['Electric'],
+        hp: 35,
+        attack: 55,
+        defense: 40,
+        special_attack: 50,
+        special_defense: 50,
+        speed: 90,
+      },
+    ];
+
+    render(
+      <Table
+        pokemonList={pokemonList}
+        paginationData={paginationData}
+        handlePagination={handlePagination}
+      />
+    );
+
+    const nextPageButton = screen.getByText('Next');
+
+    fireEvent.click(nextPageButton);
+
+    await waitFor(() => {
+      expect(handlePagination).toHaveBeenCalledWith(2);
     });
+  });
+
+  it('Should display "No pokemon found" when the pokemon list is empty', () => {
+    const pokemonList: Pokemon[] = [];
+    const paginationData = {
+      currentPage: 1,
+      hasNextPage: true,
+      hasPreviousPage: false,
+      itemsPerPage: 10,
+      totalItems: 0,
+      totalPages: 1,
+    };
+    const handlePagination = jest.fn();
+
+    render(
+      <Table
+        pokemonList={pokemonList}
+        paginationData={paginationData}
+        handlePagination={handlePagination}
+      />
+    );
+
+    expect(screen.getByText('No pokemon found')).toBeInTheDocument();
+  });
+
+  it('Should display loading state when router is in fallback mode', () => {
+    (useRouter as jest.Mock).mockReturnValue({
+      isFallback: true,
+      push: jest.fn(),
+    });
+
+    const pokemonList: Pokemon[] = [];
+    const paginationData = {
+      currentPage: 1,
+      hasNextPage: false,
+      hasPreviousPage: false,
+      itemsPerPage: 10,
+      totalItems: 0,
+      totalPages: 1,
+    };
+
+    const handlePagination = jest.fn();
+
+    render(
+      <Table
+        pokemonList={pokemonList}
+        paginationData={paginationData}
+        handlePagination={handlePagination}
+      />
+    );
+
+    expect(screen.getByText('Loading...')).toBeInTheDocument();
   });
 });

@@ -25,6 +25,10 @@ const customJestConfig = {
         '/.next/',
         '/*.api.test.(ts|tsx)',
       ],
+      coveragePathIgnorePatterns: [
+        '<rootDir>/common/utils/logger.ts',
+        '<rootDir>/spec/setupTests.ts',
+      ],
       collectCoverageFrom: [
         '<rootDir>/components/**/*.{ts,tsx}',
         '<rootDir>/pages/**/*.{ts,tsx}',
