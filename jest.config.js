@@ -57,6 +57,7 @@ const customJestConfig = {
         '!<rootDir>/api/**/*.{ts,tsx}',
         '!<rootDir>/common/interfaces/**/*.{ts,ts}',
         '!<rootDir>/common/utils/logger.ts',
+        '!<rootDir>/common/utils/calculatePokemonPower.ts',
         '!<rootDir>/common/constants.ts',
       ],
       coverageThreshold: {

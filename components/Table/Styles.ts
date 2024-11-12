@@ -3,6 +3,7 @@ import styled from 'styled-components';
 const StyledTable = styled.table`
   width: 100%;
   max-width: 900px;
+  min-width: 900px;
   margin: 20px auto;
   border-spacing: 0;
   border-radius: 12px;
@@ -48,12 +49,34 @@ const TableBody = styled.tbody`
   }
 `;
 
+const EmptyListTd = styled.td`
+  text-align: center !important;
+`
+
 const TableFooter = styled.tfoot`
   td {
     padding: 12px;
     font-weight: 500;
-    text-align: right;
+    text-align: center;
     background: rgba(255, 255, 255, 0.1);
+
+    span {
+      font-size: 0.9rem;
+    }
+
+    button {
+      background-color: transparent;
+      height: 46px;
+      width: 50px;
+
+      &:first-child {
+        margin-right: var(--global-rhythm);
+      }
+
+      &:last-child {
+        margin-left: var(--global-rhythm);
+      }
+    }
 
     &:first-child {
       border-bottom-left-radius: 12px;
@@ -64,4 +87,4 @@ const TableFooter = styled.tfoot`
   }
 `;
 
-export { StyledTable, TableBody, TableFooter, TableHeader };
+export { StyledTable, TableBody, TableFooter, TableHeader, EmptyListTd };

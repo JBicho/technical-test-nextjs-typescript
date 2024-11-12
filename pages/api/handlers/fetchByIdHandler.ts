@@ -1,23 +1,13 @@
-import fs from 'fs';
 import { NextApiRequest, NextApiResponse } from 'next';
-import path from 'path';
-import { logger } from '../../../common/utils/logger';
 import { Pokemon } from '../../../common/interfaces/pokemon';
+import { readJsonFile } from '../../../common/utils/jsonFileReader';
+import { logger } from '../../../common/utils/logger';
 
 const fetchPokemonById = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    const jsonFilePath = path.join(
-      process.cwd(),
-      'pages',
-      'api',
-      'data',
-      'pokemon.json'
-    );
-    const jsonData = await fs.promises.readFile(jsonFilePath, 'utf-8');
-    const pokemonList = JSON.parse(jsonData);
-
+    const jsonData = await readJsonFile('pages/api/data/pokemon.json');
+    const pokemonList = jsonData as Pokemon[];
     const { id: queryId } = req.query;
-
     const pokemon = pokemonList.find(
       ({ id }: Pokemon) => id === Number(queryId as string)
     );

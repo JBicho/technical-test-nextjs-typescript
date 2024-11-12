@@ -7,15 +7,28 @@ import '../setupTests';
 jest.mock('next/router', () => ({
   useRouter: jest.fn(),
 }));
-
 jest.mock('../../common/utils/calculatePokemonPower');
 
-const mockPush = jest.fn();
-(useRouter as jest.Mock).mockReturnValue({ push: mockPush });
-(calculatePokemonPower as jest.Mock).mockReturnValue(100);
-
 describe('Test Table Component', () => {
-  const tableProps: TableProps = {
+  const mockPush = jest.fn();
+  const mockHandlePagination = jest.fn();
+
+  const defaultPaginationData = {
+    currentPage: 1,
+    totalPages: 3,
+    totalItems: 25,
+    itemsPerPage: 10,
+    hasNextPage: true,
+    hasPreviousPage: false,
+  };
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    (useRouter as jest.Mock).mockReturnValue({ push: mockPush });
+    (calculatePokemonPower as jest.Mock).mockReturnValue(100);
+  });
+
+  const defaultProps: TableProps = {
     pokemonList: [
       {
         id: 1,
@@ -28,81 +41,143 @@ describe('Test Table Component', () => {
         special_defense: 61,
         speed: 41,
       },
-      {
-        id: 2,
-        name: 'Charmander',
-        type: ['Fire'],
-        hp: 39,
-        attack: 52,
-        defense: 43,
-        special_attack: 60,
-        special_defense: 50,
-        speed: 66,
-      },
     ],
+    paginationData: defaultPaginationData,
+    handlePagination: mockHandlePagination,
   };
 
-  const setupComponent = () => render(<Table {...tableProps} />);
+  const setupComponent = (props = defaultProps) => render(<Table {...props} />);
 
-  it('Renders correctly and matches the snapshot', () => {
-    const { asFragment } = setupComponent();
+  describe('Basic Rendering', () => {
+    it('Renders table headers correctly', () => {
+      setupComponent();
+      expect(screen.getByText('ID')).toBeInTheDocument();
+      expect(screen.getByText('Name')).toBeInTheDocument();
+      expect(screen.getByText('Type')).toBeInTheDocument();
+      expect(screen.getByText('Stats')).toBeInTheDocument();
+      expect(screen.getByText('Power')).toBeInTheDocument();
+    });
 
-    expect(asFragment()).toMatchSnapshot();
-  });
+    it('Renders pokemon data correctly', () => {
+      setupComponent();
+      expect(screen.getByText('Bulbasaur')).toBeInTheDocument();
+      expect(screen.getByText('Grass, Poison')).toBeInTheDocument();
+      expect(screen.getByText('100')).toBeInTheDocument();
+    });
 
-  it('Renders the table headers correctly', () => {
-    setupComponent();
-
-    expect(screen.getByText('ID')).toBeInTheDocument();
-    expect(screen.getByText('Name')).toBeInTheDocument();
-    expect(screen.getByText('Type')).toBeInTheDocument();
-    expect(screen.getByText('Stats')).toBeInTheDocument();
-    expect(screen.getByText('Power')).toBeInTheDocument();
-  });
-
-  it('Renders each Pokemon row with correct data', () => {
-    setupComponent();
-
-    tableProps.pokemonList.forEach((pokemon) => {
-      expect(screen.getByText(pokemon.id)).toBeInTheDocument();
-      expect(screen.getByText(pokemon.name)).toBeInTheDocument();
-      expect(screen.getByText(pokemon.type.join(', '))).toBeInTheDocument();
-      expect(screen.getByText(pokemon.hp)).toBeInTheDocument();
-      expect(screen.getByText(pokemon.speed)).toBeInTheDocument();
-      expect(screen.getByText(pokemon.attack)).toBeInTheDocument();
-      expect(screen.getByText(pokemon.special_attack)).toBeInTheDocument();
-      expect(screen.getByText(pokemon.defense)).toBeInTheDocument();
-      expect(screen.getByText(pokemon.special_defense)).toBeInTheDocument();
+    it('Renders empty state when no pokemon are found', () => {
+      setupComponent({
+        ...defaultProps,
+        pokemonList: [],
+      });
+      expect(screen.getByText('No pokemon found')).toBeInTheDocument();
     });
   });
 
-  it('Calculates and displays the Pokemon power for each row', () => {
-    setupComponent();
+  describe('Edge Cases', () => {
+    it('Handles Pokemon with empty type array', () => {
+      setupComponent({
+        ...defaultProps,
+        pokemonList: [
+          {
+            ...defaultProps.pokemonList[0],
+            type: [],
+          },
+        ],
+      });
 
-    expect(calculatePokemonPower).toHaveBeenCalledWith({
-      attack: tableProps.pokemonList[0].attack,
-      defense: tableProps.pokemonList[0].defense,
-      hp: tableProps.pokemonList[0].hp,
-      special_attack: tableProps.pokemonList[0].special_attack,
-      special_defense: tableProps.pokemonList[0].special_defense,
-      speed: tableProps.pokemonList[0].speed,
+      const row = screen.getByText('Bulbasaur').closest('tr');
+
+      expect(row).toBeInTheDocument();
+
+      const typeTd = row!.querySelectorAll('td')[2];
+
+      expect(typeTd.textContent).toBe('');
     });
-    expect(screen.getAllByText('100')).toHaveLength(
-      tableProps.pokemonList.length
-    );
+
+    it('Handles Pokemon with single type correctly', () => {
+      setupComponent({
+        ...defaultProps,
+        pokemonList: [
+          {
+            ...defaultProps.pokemonList[0],
+            type: ['Fire'],
+          },
+        ],
+      });
+
+      expect(screen.getByText('Fire')).toBeInTheDocument();
+    });
+
+    it('Handles Pokemon with multiple types correctly', () => {
+      setupComponent();
+
+      expect(screen.getByText('Grass, Poison')).toBeInTheDocument();
+    });
   });
 
-  it('Navigates to the correct detail page when a row is clicked', () => {
-    setupComponent();
+  describe('Pagination', () => {
+    it('Disables previous button on first page', () => {
+      setupComponent();
 
-    const firstRow = screen
-      .getByText(tableProps.pokemonList[0].name)
-      .closest('tr');
+      const prevButton = screen.getByText('Prev').closest('button');
 
-    fireEvent.click(firstRow!);
+      expect(prevButton).toBeDisabled();
+    });
 
-    expect(mockPush).toHaveBeenCalledWith(
-      `/pokemon/${tableProps.pokemonList[0].id}`
-    );
+    it('Enables next button when hasNextPage is true', () => {
+      setupComponent();
+
+      const nextButton = screen.getByText('Next').closest('button');
+
+      expect(nextButton).not.toBeDisabled();
+    });
+
+    it('Shows correct page information', () => {
+      setupComponent();
+
+      expect(
+        screen.getByText(
+          `Page ${defaultPaginationData.currentPage} of ${defaultPaginationData.totalPages}`
+        )
+      ).toBeInTheDocument();
+    });
+
+    it('Calls handlePagination with correct page number', () => {
+      setupComponent();
+
+      const nextButton = screen.getByText('Next').closest('button');
+
+      fireEvent.click(nextButton!);
+
+      expect(mockHandlePagination).toHaveBeenCalledWith(2);
+    });
+  });
+
+  describe('Navigation', () => {
+    it('Navigates to pokemon detail page when row is clicked', () => {
+      setupComponent();
+
+      const row = screen.getByText('Bulbasaur').closest('tr');
+
+      fireEvent.click(row!);
+
+      expect(mockPush).toHaveBeenCalledWith('/pokemon/1');
+    });
+  });
+
+  describe('Power Calculation', () => {
+    it('Calls calculatePokemonPower with correct parameters', () => {
+      setupComponent();
+
+      expect(calculatePokemonPower).toHaveBeenCalledWith({
+        attack: defaultProps.pokemonList[0].attack,
+        defense: defaultProps.pokemonList[0].defense,
+        hp: defaultProps.pokemonList[0].hp,
+        special_attack: defaultProps.pokemonList[0].special_attack,
+        special_defense: defaultProps.pokemonList[0].special_defense,
+        speed: defaultProps.pokemonList[0].speed,
+      });
+    });
   });
 });

@@ -1,142 +1,201 @@
 import fs from 'fs';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { createMocks } from 'node-mocks-http';
-import path from 'path';
 import { logger } from '../../../common/utils/logger';
-import { fetchJsonFileHandler } from '../../../pages/api/handlers/fetchJsonFileHandler';
+import { dataFecthHandler } from '../../../pages/api/handlers/fetchDataHandler';
+import { calculatePokemonPower } from '../../../common/utils/calculatePokemonPower';
+import { findMinPower } from '../../../common/utils/findMinValue';
+import { findMaxPower } from '../../../common/utils/findMaxValue';
+import { readJsonFile } from '../../../common/utils/jsonFileReader';
+import { MAX_LIMIT } from '../../../common/constants';
 
-jest.mock('fs', () => ({
-  promises: {
-    readFile: jest.fn(),
-  },
-}));
+jest.mock('../../../common/utils/logger');
+jest.mock('../../../common/utils/calculatePokemonPower');
+jest.mock('../../../common/utils/findMinValue');
+jest.mock('../../../common/utils/findMaxValue');
+jest.mock('../../../common/utils/jsonFileReader');
 
-jest.mock('path', () => ({
-  join: jest.fn(),
-}));
-
-jest.mock('../../../common/utils/logger', () => ({
-  logger: {
-    error: jest.fn(),
-  },
-}));
-
-describe('Test fetchJsonFileHandler', () => {
-  const mockedReadFile = fs.promises.readFile as jest.MockedFunction<
-    typeof fs.promises.readFile
-  >;
-  const mockedJoin = path.join as jest.MockedFunction<typeof path.join>;
+describe('dataFetchHandler', () => {
+  const mockPokemonData = Array.from({ length: 30 }, (_, i) => ({
+    id: i + 1,
+    name: `Pokemon ${i + 1}`,
+    attack: 10,
+    defense: 10,
+    hp: 10,
+    special_attack: 10,
+    special_defense: 10,
+    speed: 10,
+  }));
 
   beforeEach(() => {
     jest.clearAllMocks();
-
-    mockedJoin.mockReturnValue('/mock/path/to/pokemon.json');
+    (readJsonFile as jest.Mock).mockResolvedValue(mockPokemonData);
+    (calculatePokemonPower as jest.Mock).mockReturnValue(100);
+    (findMinPower as jest.Mock).mockReturnValue(50);
+    (findMaxPower as jest.Mock).mockReturnValue(150);
   });
 
-  it('Should successfully fetch and return JSON data', async () => {
-    const mockData = {
-      pokemon: [
-        { id: 1, name: 'Bulbasaur' },
-        { id: 2, name: 'Ivysaur' },
-      ],
-    };
+  it('Should require page and limit parameters', async () => {
+    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+      method: 'GET',
+    });
 
-    mockedReadFile.mockResolvedValue(JSON.stringify(mockData));
+    await dataFecthHandler(req, res);
 
-    const { req, res } = createMocks<NextApiRequest, NextApiResponse>();
+    expect(res._getStatusCode()).toBe(400);
+    expect(JSON.parse(res._getData())).toEqual({
+      message: "'page' and 'limit' are required.",
+    });
+  });
 
-    await fetchJsonFileHandler(req, res);
+  it('Should validate positive integers for page and limit', async () => {
+    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+      method: 'GET',
+      query: { page: '-1', limit: '0' },
+    });
 
-    expect(mockedJoin).toHaveBeenCalledWith(
-      process.cwd(),
-      'pages',
-      'api',
-      'data',
-      'pokemon.json'
-    );
-    expect(mockedReadFile).toHaveBeenCalledWith(
-      '/mock/path/to/pokemon.json',
-      'utf-8'
-    );
+    await dataFecthHandler(req, res);
+
+    expect(res._getStatusCode()).toBe(400);
+    expect(JSON.parse(res._getData())).toEqual({
+      message: "'page' and 'limit' must be valid positive integers.",
+    });
+  });
+
+  it('Should return paginated data with valid parameters', async () => {
+    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+      method: 'GET',
+      query: { page: '1', limit: '10' },
+    });
+
+    await dataFecthHandler(req, res);
+
     expect(res._getStatusCode()).toBe(200);
-    expect(JSON.parse(res._getData())).toEqual(mockData);
-    expect(logger.error).not.toHaveBeenCalled();
+    const response = JSON.parse(res._getData());
+    expect(response.data).toHaveLength(10);
+    expect(response.countData).toEqual({
+      count: mockPokemonData.length,
+      min: 50,
+      max: 150,
+    });
+    expect(response.pagination).toEqual({
+      currentPage: 1,
+      totalPages: 3,
+      totalItems: 30,
+      itemsPerPage: 10,
+      hasNextPage: true,
+      hasPreviousPage: false,
+    });
   });
 
-  it('Should handle file read errors properly', async () => {
-    mockedReadFile.mockRejectedValue(new Error('File not found'));
+  it('Should handle page out of range', async () => {
+    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+      method: 'GET',
+      query: { page: '100', limit: '10' },
+    });
 
-    const { req, res } = createMocks<NextApiRequest, NextApiResponse>();
+    await dataFecthHandler(req, res);
 
-    await fetchJsonFileHandler(req, res);
+    expect(res._getStatusCode()).toBe(400);
+    expect(JSON.parse(res._getData())).toEqual({
+      message: 'Page 100 does not exist. Total pages: 3',
+    });
+  });
+
+  it('Should handle name filtering', async () => {
+    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+      method: 'GET',
+      query: {
+        page: '1',
+        limit: '10',
+        name: 'Pokemon 1',
+      },
+    });
+
+    await dataFecthHandler(req, res);
+
+    expect(res._getStatusCode()).toBe(200);
+
+    const response = JSON.parse(res._getData());
+
+    expect(response.data).toHaveLength(10);
+    expect(response.pagination.totalItems).toBe(11);
+  });
+
+  it('Should handle power threshold filtering', async () => {
+    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+      method: 'GET',
+      query: {
+        page: '1',
+        limit: '10',
+        powerThreshold: '90',
+      },
+    });
+
+    await dataFecthHandler(req, res);
+
+    expect(res._getStatusCode()).toBe(200);
+    const response = JSON.parse(res._getData());
+    expect(response.data.length).toBeGreaterThan(0);
+    expect(calculatePokemonPower).toHaveBeenCalled();
+  });
+
+  it('Should return empty result for no matches', async () => {
+    (readJsonFile as jest.Mock).mockResolvedValue([]);
+
+    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+      method: 'GET',
+      query: { page: '1', limit: '10' },
+    });
+
+    await dataFecthHandler(req, res);
+
+    expect(res._getStatusCode()).toBe(200);
+    expect(JSON.parse(res._getData())).toEqual({
+      data: [],
+      pagination: {
+        currentPage: 1,
+        totalPages: 0,
+        totalItems: 0,
+        itemsPerPage: 10,
+        hasNextPage: false,
+        hasPreviousPage: false,
+      },
+    });
+  });
+
+  it('Should handle internal server error', async () => {
+    (readJsonFile as jest.Mock).mockRejectedValue(
+      new Error('Failed to read file')
+    );
+
+    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+      method: 'GET',
+      query: { page: '1', limit: '10' },
+    });
+
+    await dataFecthHandler(req, res);
 
     expect(res._getStatusCode()).toBe(500);
     expect(JSON.parse(res._getData())).toEqual({
       message: 'Internal Server Error',
     });
-    expect(logger.error).toHaveBeenCalledWith('Failed to fetch the JSON file');
-  });
-
-  it('Should handle JSON parsing errors', async () => {
-    mockedReadFile.mockResolvedValue('invalid json content');
-
-    const { req, res } = createMocks<NextApiRequest, NextApiResponse>();
-
-    await fetchJsonFileHandler(req, res);
-
-    expect(res._getStatusCode()).toBe(500);
-    expect(JSON.parse(res._getData())).toEqual({
-      message: 'Internal Server Error',
-    });
-    expect(logger.error).toHaveBeenCalledWith('Failed to fetch the JSON file');
-  });
-
-  it('Should use correct file path construction', async () => {
-    const mockData = { pokemon: [] };
-    mockedReadFile.mockResolvedValue(JSON.stringify(mockData));
-
-    const { req, res } = createMocks<NextApiRequest, NextApiResponse>();
-
-    await fetchJsonFileHandler(req, res);
-
-    expect(mockedJoin).toHaveBeenCalledWith(
-      process.cwd(),
-      'pages',
-      'api',
-      'data',
-      'pokemon.json'
+    expect(logger.error).toHaveBeenCalledWith(
+      'Failed to fetch Pokemon data',
+      expect.any(Error)
     );
-    expect(mockedJoin).toHaveBeenCalledTimes(1);
   });
 
-  it('Should handle empty JSON file', async () => {
-    mockedReadFile.mockResolvedValue('{}');
+  it('Should respect MAX_LIMIT constant', async () => {
+    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
+      method: 'GET',
+      query: { page: '1', limit: '1000' },
+    });
 
-    const { req, res } = createMocks<NextApiRequest, NextApiResponse>();
-
-    await fetchJsonFileHandler(req, res);
-
-    expect(res._getStatusCode()).toBe(200);
-    expect(JSON.parse(res._getData())).toEqual({});
-    expect(logger.error).not.toHaveBeenCalled();
-  });
-
-  it('Should handle large JSON files', async () => {
-    const largeMockData = {
-      pokemon: Array.from({ length: 1000 }, (_, i) => ({
-        id: i + 1,
-        name: `Pokemon ${i + 1}`,
-      })),
-    };
-
-    mockedReadFile.mockResolvedValue(JSON.stringify(largeMockData));
-
-    const { req, res } = createMocks<NextApiRequest, NextApiResponse>();
-
-    await fetchJsonFileHandler(req, res);
+    await dataFecthHandler(req, res);
 
     expect(res._getStatusCode()).toBe(200);
-    expect(JSON.parse(res._getData())).toEqual(largeMockData);
-    expect(logger.error).not.toHaveBeenCalled();
+    const response = JSON.parse(res._getData());
+    expect(response.pagination.itemsPerPage).toBeLessThanOrEqual(MAX_LIMIT);
   });
 });

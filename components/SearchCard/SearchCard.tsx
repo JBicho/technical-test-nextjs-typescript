@@ -15,7 +15,7 @@ export interface SearchCardProps {
   };
 }
 
-export const SearchCard = ({ onSearch, countObject }: SearchCardProps) => {
+export const SearchCard = ({ onSearch, countObject, displayCount }: SearchCardProps) => {
   const [pokemonName, setPokemonName] = useState('');
   const [powerThreshold, setPowerThreshold] = useState('');
   const debouncedSearch = useCallback(
@@ -61,7 +61,7 @@ export const SearchCard = ({ onSearch, countObject }: SearchCardProps) => {
         />
       </SearchInputContainer>
 
-      {countObject.count > 0 && <Counter {...countObject} />}
+      {displayCount && <Counter {...countObject} />}
     </Card>
   );
 };

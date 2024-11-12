@@ -63,6 +63,10 @@ const Main = styled.div`
   align-items: center;
   justify-content: center;
   min-height: 100vh;
+
+  h1 {
+    margin-top: 90px;
+  }
 `;
 
 export { Background, Container, Main, Menu, OverlayPattern };

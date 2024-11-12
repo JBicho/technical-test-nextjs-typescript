@@ -1,7 +1,7 @@
 import type { ReactElement } from 'react';
 import { Background, Container, Main, Menu, OverlayPattern } from './Styles';
 import Image from 'next/image';
-import Link from 'next/link';
+import { ConditionalLink } from '../ConditionalLink/ConditionalLink';
 
 export const Layout = (page: ReactElement): JSX.Element => {
   return (
@@ -9,15 +9,16 @@ export const Layout = (page: ReactElement): JSX.Element => {
       <Background>
         <OverlayPattern />
         <Menu>
-          <Link href={'/'} aria-label="Go to home page">
+          <ConditionalLink href={'/'} aria-label="Go to home page">
             <Image
+              priority={true}
               src="/images/pokeball.png"
               alt="Pokeball Image"
               width={96}
               height={96}
             />
             <span>Home</span>
-          </Link>
+          </ConditionalLink>
         </Menu>
         <Container>
           <Main>{page}</Main>

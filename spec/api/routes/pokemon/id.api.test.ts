@@ -2,11 +2,7 @@ import fs from 'fs';
 import { createMocks } from 'node-mocks-http';
 import getPokemonById from '../../../../pages/api/pokemon/[id]';
 
-jest.mock('fs', () => ({
-  promises: {
-    readFile: jest.fn(),
-  },
-}));
+jest.mock('fs');
 
 jest.mock('../../../../common/utils/logger', () => ({
   logger: {
@@ -16,7 +12,7 @@ jest.mock('../../../../common/utils/logger', () => ({
   },
 }));
 
-describe('Test getPokemonData API endpoint', () => {
+describe('GET /api/pokemon/[id]', () => {
   it('Should return 200 and the Pokemon data if found', async () => {
     (fs.promises.readFile as jest.Mock).mockResolvedValueOnce(
       JSON.stringify([{ id: 1, name: 'Bulbasaur' }])

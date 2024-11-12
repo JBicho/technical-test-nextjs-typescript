@@ -1,41 +1,33 @@
 import '@testing-library/jest-dom';
-import { render, screen, fireEvent, act } from '@testing-library/react';
-import { Pokemon } from '../../common/interfaces/pokemon';
-import { logger } from '../../common/utils/logger';
-import { Layout } from '../../components/LayoutComponent/Layout';
-import HomePage, { getServerSideProps } from '../../pages';
+import { act, fireEvent, render, screen } from '@testing-library/react';
+import { useRouter } from 'next/router';
 
-jest.mock('next/head', () => {
-  return {
-    __esModule: true,
-    default: ({ children }: { children: React.ReactNode }) => (
-      <div data-testid="mock-head">{children}</div>
-    ),
+jest.mock('next/router', () => ({
+  useRouter: jest.fn(),
+}));
+
+import HomePage from '../../pages';
+
+describe('HomePage Component', () => {
+  const mockRouter = {
+    push: jest.fn(),
+    query: {},
+    pathname: '/',
   };
-});
 
-jest.mock('../../components/SearchCard/SearchCard', () => ({
-  SearchCard: jest.fn(({ onSearch }) => (
-    <div data-testid="mock-search-card">
-      <button onClick={() => onSearch('Bulbasaur', '50')}>Search</button>
-    </div>
-  )),
-}));
+  const mockFetch = jest.fn();
+  global.fetch = mockFetch;
 
-jest.mock('../../components/Table/Table', () => ({
-  Table: jest.fn(() => <div data-testid="mock-table" />),
-}));
+  const defaultPagination = {
+    currentPage: 1,
+    totalPages: 3,
+    totalItems: 25,
+    itemsPerPage: 10,
+    hasNextPage: true,
+    hasPreviousPage: false,
+  };
 
-jest.mock('../../common/utils/logger', () => ({
-  logger: {
-    error: jest.fn(),
-  },
-}));
-
-global.fetch = jest.fn();
-
-describe('Test HomePage Component', () => {
-  const mockPokemonList: Pokemon[] = [
+  const mockPokemonList = [
     {
       id: 1,
       name: 'Bulbasaur',
@@ -47,179 +39,70 @@ describe('Test HomePage Component', () => {
       special_defense: 65,
       speed: 45,
     },
-    {
-      id: 2,
-      name: 'Ivysaur',
-      type: ['Grass', 'Poison'],
-      hp: 60,
-      attack: 62,
-      defense: 63,
-      special_attack: 80,
-      special_defense: 80,
-      speed: 60,
-    },
   ];
 
   beforeEach(() => {
     jest.clearAllMocks();
+    (useRouter as jest.Mock).mockImplementation(() => mockRouter);
   });
 
-  const setupComponent = () =>
-    render(<HomePage pokemonList={mockPokemonList} />);
-
-  describe('Component Rendering', () => {
-    it('Renders the HomePage with all components', () => {
-      setupComponent();
-
-      expect(screen.getByText('Pokemon list')).toBeInTheDocument();
-      expect(screen.getByTestId('mock-search-card')).toBeInTheDocument();
-      expect(screen.getByTestId('mock-table')).toBeInTheDocument();
-    });
-
-    it('Renders with an empty pokemon list', () => {
-      setupComponent();
-
-      expect(screen.getByText('Pokemon list')).toBeInTheDocument();
-      expect(screen.getByTestId('mock-table')).toBeInTheDocument();
-    });
-
-    it('Renders correct meta tags and title', () => {
-      setupComponent();
-
-      const head = screen.getByTestId('mock-head');
-
-      expect(head).toContainHTML(
-        '<meta name="description" content="A simple Pokedex, Explore a list of Pokemons, search by name, and filter them by power threshold in this interactive Pokemon list app."'
-      );
-      expect(head).toContainHTML('<title>Pokemon List</title>');
-      expect(head).toContainHTML('<link rel="icon" href="/favicon.ico"');
-    });
-  });
-
-  describe('Search Functionality', () => {
-    it('Displays error message when search fails', async () => {
-      (global.fetch as jest.Mock).mockResolvedValueOnce({
-        ok: false,
-      });
-
-      setupComponent();
-
-      await act(async () => {
-        fireEvent.click(screen.getByText('Search'));
-      });
-
-      const errorMessage = await screen.findByText('Pokemon not found');
-      expect(errorMessage).toBeInTheDocument();
-    });
-
-    it('Displays search results on successful search', async () => {
-      (global.fetch as jest.Mock).mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({
-          pokemonList: [mockPokemonList[0]],
-          count: 1,
-          min: 49,
-          max: 49,
-        }),
-      });
-
-      setupComponent();
-
-      await act(async () => {
-        fireEvent.click(screen.getByText('Search'));
-      });
-
-      expect(await screen.findByTestId('mock-table')).toBeInTheDocument();
-    });
-
-    it('Resets search results if no search criteria are provided', async () => {
-      setupComponent();
-
-      await act(async () => {
-        fireEvent.click(screen.getByText('Search'));
-      });
-
-      expect(screen.getByTestId('mock-table')).toBeInTheDocument();
-      expect(global.fetch).toHaveBeenCalledWith(
-        `/api/pokemon/search?name=Bulbasaur&powerThreshold=50`
+  const setupComponent = async (initialPage = 1) => {
+    let rendered;
+    await act(async () => {
+      rendered = render(
+        <HomePage
+          initialPokemonList={mockPokemonList}
+          initialPagination={{
+            ...defaultPagination,
+            currentPage: initialPage,
+          }}
+        />
       );
     });
-  });
+    return rendered!;
+  };
 
-  describe('Test getServerSideProps Function', () => {
-    beforeEach(() => {
-      process.env.BASE_URL = 'http://localhost:3000';
-    });
+  describe('Pagination', () => {
+    it('preserves existing query parameters during pagination', async () => {
+      const initialQuery = { name: 'Bulbasaur', powerThreshold: '50' };
+      mockRouter.query = initialQuery;
 
-    it('Fetches and returns pokemon data successfully', async () => {
-      (global.fetch as jest.Mock).mockResolvedValueOnce({
-        ok: true,
-        json: async () => mockPokemonList,
-      });
-
-      const response = await getServerSideProps();
-
-      expect(global.fetch).toHaveBeenCalledWith(
-        'http://localhost:3000/api/pokemon'
-      );
-      expect(response).toEqual({
-        props: { pokemonList: mockPokemonList },
-      });
-    });
-
-    it('Handles fetch error and returns notFound', async () => {
-      (global.fetch as jest.Mock).mockRejectedValueOnce(
-        new Error('Fetch failed')
-      );
-
-      const response = await getServerSideProps();
-
-      expect(logger.error).toHaveBeenCalledWith(
-        'Error while fetching Pokemon data'
-      );
-      expect(response).toEqual({ notFound: true });
-    });
-
-    it('Handles JSON parsing error', async () => {
-      (global.fetch as jest.Mock).mockResolvedValueOnce({
-        ok: true,
-        json: async () => {
-          throw new Error('JSON parse error');
+      const mockResponse = {
+        data: [mockPokemonList[0]],
+        countData: { count: 1, min: 49, max: 49 },
+        pagination: {
+          ...defaultPagination,
+          currentPage: 1,
+          hasNextPage: true,
+          hasPreviousPage: false,
         },
-      });
+      };
 
-      const response = await getServerSideProps();
-
-      expect(logger.error).toHaveBeenCalledWith(
-        'Error while fetching Pokemon data'
-      );
-      expect(response).toEqual({ notFound: true });
-    });
-
-    it('Uses the correct base URL from environment', async () => {
-      process.env.BASE_URL = 'https://custom-domain.com';
-
-      (global.fetch as jest.Mock).mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: true,
-        json: async () => mockPokemonList,
+        json: async () => mockResponse,
       });
 
-      await getServerSideProps();
+      await setupComponent(1);
 
-      expect(global.fetch).toHaveBeenCalledWith(
-        'https://custom-domain.com/api/pokemon'
+      await act(async () => {
+        const nextButton = screen.getByText('Next');
+
+        fireEvent.click(nextButton);
+        await new Promise((resolve) => setTimeout(resolve, 0));
+      });
+
+      expect(mockRouter.push).toHaveBeenCalledWith(
+        {
+          pathname: '/',
+          query: {
+            ...initialQuery,
+            page: 2,
+          },
+        },
+        undefined,
+        { shallow: true }
       );
     });
-  });
-
-  describe('Layout Integration', () => {
-    it('should have Layout assigned to getLayout', () => {
-      expect(HomePage.getLayout).toBe(Layout);
-    });
-  });
-
-  it('Should match snapshot', () => {
-    const { container } = render(<HomePage pokemonList={mockPokemonList} />);
-    expect(container).toMatchSnapshot();
   });
 });

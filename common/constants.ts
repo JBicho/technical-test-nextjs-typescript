@@ -5,8 +5,19 @@ const MAX_METER_VALUE = 255;
 // TODO: remove after implementing pagination
 const MAX_ID = 809;
 
+const MAX_LIMIT = 100;
+
+const PAGE_LIMIT = 10;
+
 // Keyword to ensure navigation in details page
 const NAVIGATE_NEXT = 'next';
 const NAVIGATE_PREV = 'prev';
 
-export { MAX_METER_VALUE, NAVIGATE_NEXT, NAVIGATE_PREV, MAX_ID };
+export {
+  MAX_METER_VALUE,
+  NAVIGATE_NEXT,
+  NAVIGATE_PREV,
+  MAX_ID,
+  PAGE_LIMIT,
+  MAX_LIMIT,
+};

@@ -1,8 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { fetchJsonFileHandler } from '../handlers/fetchJsonFileHandler';
+import { dataFecthHandler } from '../handlers/fetchDataHandler';
 import { errorMiddleware } from '../middleware/errorMiddleware';
 
 const getPokemonData = async (req: NextApiRequest, res: NextApiResponse) =>
-  errorMiddleware(['GET'], fetchJsonFileHandler)(req, res);
+  errorMiddleware(['GET'], dataFecthHandler)(req, res);
 
 export default getPokemonData;

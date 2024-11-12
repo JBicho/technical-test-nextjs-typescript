@@ -1,9 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Test Table Component Renders correctly and matches the snapshot 1`] = `
+exports[`Table Component renders correctly and matches the snapshot 1`] = `
 <DocumentFragment>
   <table
-    class="Styles__StyledTable-sc-1o1cw3u-0 UzSlY"
+    class="Styles__StyledTable-sc-1o1cw3u-0 brXwnB"
   >
     <thead
       class="Styles__TableHeader-sc-1o1cw3u-1 jSvCgs"
@@ -96,6 +96,31 @@ exports[`Test Table Component Renders correctly and matches the snapshot 1`] = `
         </td>
       </tr>
     </tbody>
+    <tfoot
+      class="Styles__TableFooter-sc-1o1cw3u-4 iiILBb"
+    >
+      <tr>
+        <td
+          colspan="10"
+        >
+          <button
+            disabled=""
+          >
+            <strong>
+              Prev
+            </strong>
+          </button>
+          <span>
+            Page 1 of 3
+          </span>
+          <button>
+            <strong>
+              Next
+            </strong>
+          </button>
+        </td>
+      </tr>
+    </tfoot>
   </table>
 </DocumentFragment>
 `;

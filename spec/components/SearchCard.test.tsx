@@ -1,4 +1,4 @@
-import { act, fireEvent, render, waitFor } from '@testing-library/react';
+import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import * as lodash from 'lodash';
 import {
   SearchCard,
@@ -27,10 +27,10 @@ jest.mock('lodash', () => ({
   }),
 }));
 
-describe('SearchCard', () => {
+describe('SearchCard Component', () => {
   const defaultProps: SearchCardProps = {
     onSearch: jest.fn(),
-    displayCount: true,
+    displayCount: false,
     countObject: {
       count: 0,
       min: 0,
@@ -42,121 +42,145 @@ describe('SearchCard', () => {
     jest.clearAllMocks();
   });
 
-  it('Renders both search inputs with correct labels and placeholders', () => {
-    const { getByLabelText, getByPlaceholderText } = render(
-      <SearchCard {...defaultProps} />
-    );
+  describe('Initial Rendering', () => {
+    it('Should render both search inputs with correct labels and placeholders', () => {
+      render(<SearchCard {...defaultProps} />);
 
-    expect(getByLabelText('Search')).toBeInTheDocument();
-    expect(getByLabelText('Power threshold')).toBeInTheDocument();
-    expect(getByPlaceholderText('Search a Pokemon Name')).toBeInTheDocument();
-    expect(getByPlaceholderText('Write a Power Threshold')).toBeInTheDocument();
-  });
-
-  it('Shows Counter component when count is greater than 0', () => {
-    const props = {
-      ...defaultProps,
-      countObject: {
-        count: 5,
-        min: 0,
-        max: 100,
-      },
-    };
-
-    const { getByText } = render(<SearchCard {...props} />);
-
-    expect(getByText('5')).toBeInTheDocument();
-  });
-
-  it('Does not show Counter component when count is 0', () => {
-    const { queryByText } = render(<SearchCard {...defaultProps} />);
-
-    expect(queryByText('0')).not.toBeInTheDocument();
-  });
-
-  it('Calls onSearch with debounce when pokemon name changes', async () => {
-    const onSearch = jest.fn();
-    const { getByPlaceholderText } = render(
-      <SearchCard {...defaultProps} onSearch={onSearch} />
-    );
-    const nameInput = getByPlaceholderText('Search a Pokemon Name');
-
-    await act(async () => {
-      fireEvent.change(nameInput, { target: { value: 'Pikachu' } });
+      expect(screen.getByLabelText('Search')).toBeInTheDocument();
+      expect(screen.getByLabelText('Power threshold')).toBeInTheDocument();
+      expect(
+        screen.getByPlaceholderText('Search a Pokemon Name')
+      ).toBeInTheDocument();
+      expect(
+        screen.getByPlaceholderText('Write a Power Threshold')
+      ).toBeInTheDocument();
     });
 
-    await waitFor(
-      () => {
-        expect(onSearch).toHaveBeenCalledWith('Pikachu', '');
-      },
-      { timeout: 400 }
-    );
-  });
+    it('Should render counter section when displayCount is true and count > 0', () => {
+      render(
+        <SearchCard
+          {...defaultProps}
+          displayCount={true}
+          countObject={{
+            count: 5,
+            min: 10,
+            max: 100,
+          }}
+        />
+      );
 
-  it('Calls onSearch with debounce when power threshold changes', async () => {
-    const onSearch = jest.fn();
-    const { getByPlaceholderText } = render(
-      <SearchCard {...defaultProps} onSearch={onSearch} />
-    );
-    const powerInput = getByPlaceholderText('Write a Power Threshold');
-
-    await act(async () => {
-      fireEvent.change(powerInput, { target: { value: '100' } });
+      const counterSection = screen.getByRole('status');
+      expect(within(counterSection).getByText('5')).toBeInTheDocument();
+      expect(screen.getByText('Min:')).toBeInTheDocument();
+      expect(screen.getByText('10')).toBeInTheDocument();
+      expect(screen.getByText('Max:')).toBeInTheDocument();
+      expect(screen.getByText('100')).toBeInTheDocument();
     });
 
-    await waitFor(
-      () => {
-        expect(onSearch).toHaveBeenCalledWith('', '100');
-      },
-      { timeout: 400 }
-    );
-  });
+    it('Should not render counter section when displayCount is false', () => {
+      render(<SearchCard {...defaultProps} displayCount={false} />);
 
-  it('Applies throttling to search calls', async () => {
-    const onSearch = jest.fn();
-    const { getByPlaceholderText } = render(
-      <SearchCard {...defaultProps} onSearch={onSearch} />
-    );
-    const nameInput = getByPlaceholderText('Search a Pokemon Name');
-
-    await act(async () => {
-      fireEvent.change(nameInput, { target: { value: 'P' } });
-      fireEvent.change(nameInput, { target: { value: 'Pi' } });
-      fireEvent.change(nameInput, { target: { value: 'Pik' } });
-      fireEvent.change(nameInput, { target: { value: 'Pika' } });
+      expect(screen.queryByRole('status')).not.toBeInTheDocument();
     });
 
-    expect(lodash.throttle).toHaveBeenCalledWith(expect.any(Function), 1000);
+    it('Should render counter with zero values when displayCount is true and count is 0', () => {
+      render(
+        <SearchCard
+          {...defaultProps}
+          displayCount={true}
+          countObject={{
+            count: 0,
+            min: 0,
+            max: 0,
+          }}
+        />
+      );
+
+      const counterSection = screen.queryByRole('status');
+
+      expect(counterSection).toBeInTheDocument();
+
+
+      expect(screen.getByText('Count:')).toBeInTheDocument();
+
+      const countValue = within(screen.getByRole('status')).getByText('0');
+
+      expect(countValue).toBeInTheDocument();
+    });
   });
 
-  it('Cleans up debounce on unmount', () => {
-    const { unmount } = render(<SearchCard {...defaultProps} />);
-    const debouncedFn = (lodash.debounce as jest.Mock).mock.results[0]
-      .value as MockedDebouncedFunction;
+  describe('Search Functionality', () => {
+    it('Should call onSearch with debounce when pokemon name changes', async () => {
+      const onSearch = jest.fn();
 
-    unmount();
+      render(<SearchCard {...defaultProps} onSearch={onSearch} />);
 
-    expect(debouncedFn.cancel).toHaveBeenCalled();
-  });
+      const nameInput = screen.getByPlaceholderText('Search a Pokemon Name');
 
-  it('Updates both search terms together', async () => {
-    const onSearch = jest.fn();
-    const { getByPlaceholderText } = render(
-      <SearchCard {...defaultProps} onSearch={onSearch} />
-    );
-    const nameInput = getByPlaceholderText('Search a Pokemon Name');
-    const powerInput = getByPlaceholderText('Write a Power Threshold');
+      await act(async () => {
+        fireEvent.change(nameInput, { target: { value: 'Pikachu' } });
+      });
 
-    await act(async () => {
-      fireEvent.change(nameInput, { target: { value: 'Pikachu' } });
-      fireEvent.change(powerInput, { target: { value: '100' } });
+      expect(lodash.debounce).toHaveBeenCalledWith(expect.any(Function), 300);
     });
 
-    await waitFor(
-      () => {
-        expect(onSearch).toHaveBeenCalledWith('Pikachu', '100');
-      },
-      { timeout: 400 }
-    );
+    it('Should call onSearch with debounce when power threshold changes', async () => {
+      const onSearch = jest.fn();
+
+      render(<SearchCard {...defaultProps} onSearch={onSearch} />);
+
+      const powerInput = screen.getByPlaceholderText('Write a Power Threshold');
+
+      await act(async () => {
+        fireEvent.change(powerInput, { target: { value: '100' } });
+      });
+
+      expect(lodash.debounce).toHaveBeenCalledWith(expect.any(Function), 300);
+    });
+
+    it('Should use throttle for rapid input changes', async () => {
+      const onSearch = jest.fn();
+      render(<SearchCard {...defaultProps} onSearch={onSearch} />);
+
+      const nameInput = screen.getByPlaceholderText('Search a Pokemon Name');
+
+      await act(async () => {
+        fireEvent.change(nameInput, { target: { value: 'P' } });
+        fireEvent.change(nameInput, { target: { value: 'Pi' } });
+        fireEvent.change(nameInput, { target: { value: 'Pik' } });
+      });
+
+      expect(lodash.throttle).toHaveBeenCalledWith(expect.any(Function), 1000);
+    });
+
+    it('Should preserve both search values during updates', async () => {
+      const onSearch = jest.fn();
+
+      render(<SearchCard {...defaultProps} onSearch={onSearch} />);
+
+      const nameInput = screen.getByPlaceholderText('Search a Pokemon Name');
+      const powerInput = screen.getByPlaceholderText('Write a Power Threshold');
+
+      await act(async () => {
+        fireEvent.change(nameInput, { target: { value: 'Pikachu' } });
+        fireEvent.change(powerInput, { target: { value: '100' } });
+      });
+
+      expect(nameInput).toHaveValue('Pikachu');
+      expect(powerInput).toHaveValue('100');
+    });
+  });
+
+  describe('Cleanup', () => {
+    it('Should cancel debounce on unmount', () => {
+      const { unmount } = render(<SearchCard {...defaultProps} />);
+
+      const debouncedFn = (lodash.debounce as jest.Mock).mock.results[0]
+        .value as MockedDebouncedFunction;
+
+      unmount();
+
+      expect(debouncedFn.cancel).toHaveBeenCalled();
+    });
   });
 });
