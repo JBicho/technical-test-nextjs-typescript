@@ -39,7 +39,9 @@ export const dataFecthHandler = async (
 
     const currentPage = parsedPage;
     const itemsPerPage = Math.min(parsedLimit, MAX_LIMIT);
-    const jsonData = await readJsonFile('pages/api/data/pokemon.json');
+    const dataPath =
+      process.env.POKEMON_DATA_PATH || 'pages/api/data/pokemon.json';
+    const jsonData = await readJsonFile(dataPath);
     const pokemonList = jsonData as Pokemon[];
     let filteredPokemons = pokemonList;
 

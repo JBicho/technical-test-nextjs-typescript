@@ -2,10 +2,13 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { Pokemon } from '../../../common/interfaces/pokemon';
 import { readJsonFile } from '../../../common/utils/jsonFileReader';
 import { logger } from '../../../common/utils/logger';
+import path from 'path';
 
 const fetchPokemonById = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    const jsonData = await readJsonFile('pages/api/data/pokemon.json');
+    const dataPath =
+      process.env.POKEMON_DATA_PATH || 'pages/api/data/pokemon.json';
+    const jsonData = await readJsonFile(dataPath);
     const pokemonList = jsonData as Pokemon[];
     const { id: queryId } = req.query;
     const pokemon = pokemonList.find(

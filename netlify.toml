@@ -6,8 +6,12 @@
   package = "@netlify/plugin-nextjs"
 
 [functions]
-  included_files = ["node_modules/sharp/**/*"]
+  included_files = [
+    "node_modules/sharp/**/*",
+    "pages/api/data/**/*"  # Include the data directory
+  ]
 
 [build.environment]
   NEXT_USE_NETLIFY_EDGE = "true"
   NEXT_SHARP_PATH = "/node_modules/sharp"
+  POKEMON_DATA_PATH = "pages/api/data/pokemon.json"
