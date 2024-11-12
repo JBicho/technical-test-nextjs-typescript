@@ -10,7 +10,7 @@ import {
   Details,
   ImageContainer,
   TypesList,
-} from './Styles';
+} from '../../components/Pokemon/Styles';
 import {
   MAX_ID,
   MAX_METER_VALUE,
