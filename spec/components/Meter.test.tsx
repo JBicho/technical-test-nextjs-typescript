@@ -17,19 +17,19 @@ describe('Test Meter Component', () => {
 
   const setupComponent = () => render(<Meter {...meterProps} />);
 
-  it('renders correctly and matches the snapshot', () => {
+  it('Renders correctly and matches the snapshot', () => {
     const { asFragment } = setupComponent();
 
     expect(asFragment()).toMatchSnapshot();
   });
 
-  it('renders with correct label', () => {
+  it('Renders with correct label', () => {
     setupComponent();
 
     expect(screen.getByText(meterProps.label)).toBeInTheDocument();
   });
 
-  it('renders meter with correct min, max, and value attributes', () => {
+  it('Renders meter with correct min, max, and value attributes', () => {
     setupComponent();
 
     const meterElement = screen.getByRole('meter');

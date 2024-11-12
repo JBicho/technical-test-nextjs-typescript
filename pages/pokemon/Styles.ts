@@ -42,6 +42,12 @@ const DetailViewNavigation = styled.div`
   justify-content: space-between;
   margin-top: var(--global-rhythm);
   width: 100%;
+
+  button {
+    &:disabled {
+      cursor: not-allowed;
+    }
+  }
 `;
 
 const Details = styled.div`

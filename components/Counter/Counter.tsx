@@ -1,23 +1,19 @@
 import { StyledSection } from './Styles';
 
 export interface CounterProps {
-  countOverThreshold: number;
+  count: number;
   min: number;
   max: number;
 }
 
-export const Counter = ({
-  countOverThreshold = 0,
-  min = 0,
-  max = 0,
-}: CounterProps) => {
+export const Counter = ({ count = 0, min = 0, max = 0 }: CounterProps) => {
   return (
     <>
       <StyledSection>
         <p role="status" aria-live="polite">
-          Count over threshold:
+          Count:
           <span>
-            <strong>{countOverThreshold}</strong>
+            <strong>{count}</strong>
           </span>
         </p>
         <p>

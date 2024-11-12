@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Test Counter Component renders correctly and matches the snapshot 1`] = `
+exports[`Test Counter Component Renders correctly and matches the snapshot 1`] = `
 <DocumentFragment>
   <section
     class="Styles__StyledSection-sc-3x6sym-0 eodnVs"
@@ -9,7 +9,7 @@ exports[`Test Counter Component renders correctly and matches the snapshot 1`] =
       aria-live="polite"
       role="status"
     >
-      Count over threshold:
+      Count:
       <span>
         <strong>
           239

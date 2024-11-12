@@ -1,123 +1,53 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { ApiError } from 'next/dist/server/api-utils';
-import { createMocks } from 'node-mocks-http';
-import { logger } from '../../../common/utils/logger';
 import { errorMiddleware } from '../../../pages/api/middleware/errorMiddleware';
 
-// Mock the logger to prevent actual logging during tests
-jest.mock('../../../common/utils/logger', () => ({
-  logger: {
-    error: jest.fn(),
-  },
-}));
+const createMockResponse = (): NextApiResponse => {
+  const mockRes = {
+    status: jest.fn().mockReturnThis(),
+    json: jest.fn(),
+    send: jest.fn(),
+    end: jest.fn(),
+  };
+  return mockRes as unknown as NextApiResponse;
+};
 
-describe('errorMiddleware', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
+describe('Test errorMiddleware', () => {
+  it('Should reject unsupported HTTP methods and not call handlers', async () => {
+    const mockedRequest = { method: 'DELETE' } as NextApiRequest;
+    const mockedResponse = createMockResponse();
+    const handlerMock = jest.fn();
 
-  it('should execute all handlers successfully when no errors occur', async () => {
-    const { req, res } = createMocks<NextApiRequest, NextApiResponse>();
+    await errorMiddleware(['GET'], handlerMock)(mockedRequest, mockedResponse);
 
-    const handler1 = jest.fn().mockResolvedValue(undefined);
-    const handler2 = jest.fn().mockResolvedValue(undefined);
-
-    await errorMiddleware(handler1, handler2)(req, res);
-
-    expect(handler1).toHaveBeenCalledWith(req, res);
-    expect(handler2).toHaveBeenCalledWith(req, res);
-    expect(res._getStatusCode()).toBe(200);
-  });
-
-  it('should handle ApiError with correct status code and message', async () => {
-    const { req, res } = createMocks<NextApiRequest, NextApiResponse>();
-
-    const errorHandler = jest
-      .fn()
-      .mockRejectedValue(new ApiError(404, 'Resource not found'));
-
-    await errorMiddleware(errorHandler)(req, res);
-
-    expect(res._getStatusCode()).toBe(404);
-    expect(JSON.parse(res._getData())).toEqual({
-      message: 'Resource not found',
+    expect(mockedResponse.status).toHaveBeenCalledWith(405);
+    expect(mockedResponse.json).toHaveBeenCalledWith({
+      message: 'Method Not Allowed',
     });
-    expect(logger.error).not.toHaveBeenCalled();
+    expect(handlerMock).not.toHaveBeenCalled();
   });
 
-  it('should handle unexpected errors with 500 status code', async () => {
-    const { req, res } = createMocks<NextApiRequest, NextApiResponse>();
+  it('Should call the handler if the method is supported', async () => {
+    const mockedRequest = { method: 'GET' } as NextApiRequest;
+    const mockedResponse = createMockResponse();
+    const handlerMock = jest.fn();
 
-    const errorHandler = jest
+    await errorMiddleware(['GET'], handlerMock)(mockedRequest, mockedResponse);
+
+    expect(handlerMock).toHaveBeenCalled();
+  });
+
+  it('Should handle errors thrown by handlers and return 500', async () => {
+    const mockedRequest = { method: 'GET' } as NextApiRequest;
+    const mockedResponse = createMockResponse();
+    const handlerMock = jest
       .fn()
-      .mockRejectedValue(new Error('Unexpected error'));
+      .mockRejectedValue(new Error('Something went wrong'));
 
-    await errorMiddleware(errorHandler)(req, res);
+    await errorMiddleware(['GET'], handlerMock)(mockedRequest, mockedResponse);
 
-    expect(res._getStatusCode()).toBe(500);
-    expect(JSON.parse(res._getData())).toEqual({
+    expect(mockedResponse.status).toHaveBeenCalledWith(500);
+    expect(mockedResponse.json).toHaveBeenCalledWith({
       message: 'Internal Server Error',
-    });
-    expect(logger.error).toHaveBeenCalledWith('Unexpected problem occurred');
-  });
-
-  it('should stop execution chain when an error occurs', async () => {
-    const { req, res } = createMocks<NextApiRequest, NextApiResponse>();
-
-    const handler1 = jest
-      .fn()
-      .mockRejectedValue(new ApiError(400, 'Bad Request'));
-    const handler2 = jest.fn().mockResolvedValue(undefined);
-
-    await errorMiddleware(handler1, handler2)(req, res);
-
-    expect(handler1).toHaveBeenCalledWith(req, res);
-    expect(handler2).not.toHaveBeenCalled();
-    expect(res._getStatusCode()).toBe(400);
-    expect(JSON.parse(res._getData())).toEqual({
-      message: 'Bad Request',
-    });
-  });
-
-  it('should handle async handlers properly', async () => {
-    const { req, res } = createMocks<NextApiRequest, NextApiResponse>();
-
-    const handler1 = jest
-      .fn()
-      .mockImplementation(
-        () => new Promise((resolve) => setTimeout(resolve, 100))
-      );
-    const handler2 = jest
-      .fn()
-      .mockImplementation(
-        () => new Promise((resolve) => setTimeout(resolve, 100))
-      );
-
-    await errorMiddleware(handler1, handler2)(req, res);
-
-    expect(handler1).toHaveBeenCalledWith(req, res);
-    expect(handler2).toHaveBeenCalledWith(req, res);
-    expect(res._getStatusCode()).toBe(200);
-  });
-
-  it('should handle rejection in async handlers', async () => {
-    const { req, res } = createMocks<NextApiRequest, NextApiResponse>();
-
-    const handler = jest
-      .fn()
-      .mockImplementation(
-        () =>
-          new Promise((_, reject) =>
-            setTimeout(() => reject(new ApiError(403, 'Forbidden')), 100)
-          )
-      );
-
-    await errorMiddleware(handler)(req, res);
-
-    expect(handler).toHaveBeenCalledWith(req, res);
-    expect(res._getStatusCode()).toBe(403);
-    expect(JSON.parse(res._getData())).toEqual({
-      message: 'Forbidden',
     });
   });
 });

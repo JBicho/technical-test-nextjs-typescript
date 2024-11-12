@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`HomePage Component Should match snapshot 1`] = `
+exports[`Test HomePage Component Should match snapshot 1`] = `
 <div>
   <div
     data-testid="mock-head"
@@ -22,7 +22,11 @@ exports[`HomePage Component Should match snapshot 1`] = `
   </h1>
   <div
     data-testid="mock-search-card"
-  />
+  >
+    <button>
+      Search
+    </button>
+  </div>
   <div
     data-testid="mock-table"
   />

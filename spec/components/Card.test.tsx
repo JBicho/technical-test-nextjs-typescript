@@ -17,7 +17,7 @@ describe('Test Card Component', () => {
       </Card>
     );
 
-  it('renders correctly and matches the snapshot', () => {
+  it('Renders correctly and matches the snapshot', () => {
     const { asFragment } = setupComponent();
 
     expect(asFragment()).toMatchSnapshot();

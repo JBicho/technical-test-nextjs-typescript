@@ -8,16 +8,16 @@ describe('Test Counter Component', () => {
   });
 
   const counterProps: CounterProps = {
-    countOverThreshold: 239,
+    count: 239,
     max: 235,
     min: 100,
   };
 
   const setupComponent = () => render(<Counter {...counterProps} />);
 
-  it('renders correctly and matches the snapshot', () => {
+  it('Renders correctly and matches the snapshot', () => {
     const { asFragment } = setupComponent();
-
+    
     expect(asFragment()).toMatchSnapshot();
   });
 
@@ -25,11 +25,8 @@ describe('Test Counter Component', () => {
     setupComponent();
 
     expect(
-      screen
-        .getByText('Count over threshold:')
-        .closest('p')
-        ?.querySelector('span > strong')
-    ).toHaveTextContent(counterProps.countOverThreshold.toString());
+      screen.getByText('Count:').closest('p')?.querySelector('span > strong')
+    ).toHaveTextContent(counterProps.count.toString());
 
     expect(
       screen.getByText('Min:').closest('p')?.querySelector('span > strong')

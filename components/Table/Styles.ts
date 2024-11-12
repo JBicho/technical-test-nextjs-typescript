@@ -32,6 +32,8 @@ const TableHeader = styled.thead`
 
 const TableBody = styled.tbody`
   tr {
+    border-bottom: 1px rgba(255, 255, 255, 1);
+
     &:hover {
       background: rgba(255, 255, 255, 0.12);
       cursor: pointer;
@@ -39,7 +41,7 @@ const TableBody = styled.tbody`
   }
 
   td {
-    padding: 12px;
+    padding: calc(var(--global-rhythm) / 1.5);
     font-size: 0.95rem;
     text-align: left;
     background: rgba(255, 255, 255, 0.05);

@@ -19,10 +19,8 @@ export const fetchJsonFileHandler = async (
 
     res.status(200).json(JSON.parse(jsonData));
   } catch (error) {
-    const message = 'Failed to fetch the JSON file';
+    logger.error('Failed to fetch the JSON file');
 
-    logger.error(message);
-
-    res.status(500).json({ message });
+    res.status(500).json({ message: 'Internal Server Error' });
   }
 };

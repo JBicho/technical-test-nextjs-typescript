@@ -3,10 +3,7 @@ import { calculatePokemonPower } from '../../common/utils/calculatePokemonPower'
 describe('Test calculatePokemonPower util', () => {
   it('Should return the correct power number when a pokemon is passed', () => {
     const expectedResult = 318;
-    const testPokemon = {
-      id: 1,
-      name: 'Bulbasaur',
-      type: ['Grass', 'Poison'],
+    const testData = {
       hp: 45,
       attack: 49,
       defense: 49,
@@ -15,6 +12,6 @@ describe('Test calculatePokemonPower util', () => {
       speed: 45,
     };
 
-    expect(calculatePokemonPower(testPokemon)).toEqual(expectedResult);
+    expect(calculatePokemonPower(testData)).toEqual(expectedResult);
   });
 });

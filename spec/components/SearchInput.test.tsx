@@ -1,66 +1,86 @@
-import { fireEvent, render, screen } from '@testing-library/react';
-import {
-  SearchInput,
-  SearchInputProps,
-} from '../../components/SearchInput/SearchInput';
+import { fireEvent, render, waitFor } from '@testing-library/react';
+import { SearchInput } from '../../components/SearchInput/SearchInput';
 import '../setupTests';
 
-describe('Test Search Input Component', () => {
-  beforeEach(() => {
-    jest.resetModules();
+describe('Test SearchInput', () => {
+  it('Renders the label and input with the correct props', () => {
+    const { getByLabelText, getByPlaceholderText } = render(
+      <SearchInput
+        label="Test Label"
+        id="test-id"
+        placeholder="Test Placeholder"
+        value=""
+        onSearch={() => {}}
+      />
+    );
+
+    expect(getByLabelText('Test Label')).toBeInTheDocument();
+    expect(getByPlaceholderText('Test Placeholder')).toBeInTheDocument();
   });
 
-  const searchInputProps: SearchInputProps = {
-    id: 'someID',
-    label: 'someLabel',
-    placeholder: 'somePlaceHolder',
-    onSearch: jest.fn(),
-  };
+  it('Calls onSearch with the correct value when input changes', () => {
+    const onSearch = jest.fn();
+    const { getByPlaceholderText } = render(
+      <SearchInput
+        label="Test Label"
+        id="test-id"
+        placeholder="Test Placeholder"
+        value=""
+        onSearch={onSearch}
+      />
+    );
 
-  const setupComponent = () => {
-    return render(<SearchInput {...searchInputProps} />);
-  };
+    fireEvent.change(getByPlaceholderText('Test Placeholder'), {
+      target: { value: 'test value' },
+    });
 
-  it('renders correctly and matches the snapshot', () => {
-    const { asFragment } = setupComponent();
-
-    expect(asFragment()).toMatchSnapshot();
+    expect(onSearch).toHaveBeenCalledWith('test value');
   });
 
-  it('renders with the correct label and placeholder', () => {
-    setupComponent();
+  it('Updates the input value when the value prop changes', () => {
+    const { getByPlaceholderText, rerender } = render(
+      <SearchInput
+        label="Test Label"
+        id="test-id"
+        placeholder="Test Placeholder"
+        value=""
+        onSearch={() => {}}
+      />
+    );
 
-    expect(screen.getByLabelText(searchInputProps.label)).toBeInTheDocument();
-    expect(
-      screen.getByPlaceholderText(searchInputProps.placeholder)
-    ).toBeInTheDocument();
+    const input = getByPlaceholderText('Test Placeholder');
+    expect(input).toHaveValue('');
+
+    rerender(
+      <SearchInput
+        label="Test Label"
+        id="test-id"
+        placeholder="Test Placeholder"
+        value="new value"
+        onSearch={() => {}}
+      />
+    );
+
+    expect(input).toHaveValue('new value');
   });
 
-  it('calls onSearch with the correct query on input change', () => {
-    setupComponent();
+  it('Calls onSearch with an empty string when input is cleared', () => {
+    const onSearch = jest.fn();
+    const { getByPlaceholderText } = render(
+      <SearchInput
+        label="Test Label"
+        id="test-id"
+        placeholder="Test Placeholder"
+        value="test value"
+        onSearch={onSearch}
+      />
+    );
 
-    const input = screen.getByPlaceholderText(searchInputProps.placeholder);
-
-    fireEvent.change(input, { target: { value: 'Hello' } });
-
-    expect(searchInputProps.onSearch).toHaveBeenCalledWith('Hello');
-
-    fireEvent.change(input, { target: { value: 'Hello World' } });
-
-    expect(searchInputProps.onSearch).toHaveBeenCalledWith('Hello World');
-  });
-
-  it('calls onSearch with an empty string when input is cleared', () => {
-    setupComponent();
-
-    const input = screen.getByPlaceholderText(searchInputProps.placeholder);
-
-    fireEvent.change(input, { target: { value: 'Search Term' } });
-
-    expect(searchInputProps.onSearch).toHaveBeenCalledWith('Search Term');
+    const input = getByPlaceholderText('Test Placeholder');
 
     fireEvent.change(input, { target: { value: '' } });
 
-    expect(searchInputProps.onSearch).toHaveBeenCalledWith('');
+    expect(onSearch).toHaveBeenCalledWith('');
+    expect(onSearch).toHaveBeenCalledTimes(1);
   });
 });

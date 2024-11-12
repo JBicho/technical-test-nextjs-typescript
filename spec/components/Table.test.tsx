@@ -1,11 +1,18 @@
-jest.mock('../../common/utils/calculatePokemonPower', () => ({
-  calculatePokemonPower: jest.fn().mockReturnValue(100),
+import { fireEvent, render, screen } from '@testing-library/react';
+import { useRouter } from 'next/router';
+import { calculatePokemonPower } from '../../common/utils/calculatePokemonPower';
+import { Table, TableProps } from '../../components/Table/Table';
+import '../setupTests';
+
+jest.mock('next/router', () => ({
+  useRouter: jest.fn(),
 }));
 
-import { render, screen } from '@testing-library/react';
-import { Table, TableProps } from '../../components/Table/Table';
-import { calculatePokemonPower } from '../../common/utils/calculatePokemonPower';
-import '../setupTests';
+jest.mock('../../common/utils/calculatePokemonPower');
+
+const mockPush = jest.fn();
+(useRouter as jest.Mock).mockReturnValue({ push: mockPush });
+(calculatePokemonPower as jest.Mock).mockReturnValue(100);
 
 describe('Test Table Component', () => {
   const tableProps: TableProps = {
@@ -13,24 +20,24 @@ describe('Test Table Component', () => {
       {
         id: 1,
         name: 'Bulbasaur',
-        type: ['Grass', 'Water'],
+        type: ['Grass', 'Poison'],
         hp: 45,
         attack: 49,
-        defense: 48,
+        defense: 55,
         special_attack: 65,
-        special_defense: 67,
-        speed: 46,
+        special_defense: 61,
+        speed: 41,
       },
       {
         id: 2,
-        name: 'Ivysaur',
-        type: ['Poison', 'Fire'],
-        hp: 60,
-        attack: 62,
-        defense: 63,
-        special_attack: 81,
-        special_defense: 80,
-        speed: 69,
+        name: 'Charmander',
+        type: ['Fire'],
+        hp: 39,
+        attack: 52,
+        defense: 43,
+        special_attack: 60,
+        special_defense: 50,
+        speed: 66,
       },
     ],
   };
@@ -43,7 +50,7 @@ describe('Test Table Component', () => {
     expect(asFragment()).toMatchSnapshot();
   });
 
-  it('Should render the component with the correct props', () => {
+  it('Renders the table headers correctly', () => {
     setupComponent();
 
     expect(screen.getByText('ID')).toBeInTheDocument();
@@ -53,50 +60,49 @@ describe('Test Table Component', () => {
     expect(screen.getByText('Power')).toBeInTheDocument();
   });
 
-  it('Renders data rows correctly for each Pokemon', () => {
+  it('Renders each Pokemon row with correct data', () => {
     setupComponent();
 
-    const rows = screen.getAllByRole('row');
-
-    expect(rows[1]).toHaveTextContent('1');
-    expect(rows[1]).toHaveTextContent('Bulbasaur');
-    expect(rows[1]).toHaveTextContent('Grass, Water');
-    expect(rows[1]).toHaveTextContent('45');
-    expect(rows[1]).toHaveTextContent('49');
-    expect(rows[1]).toHaveTextContent('48');
-    expect(rows[1]).toHaveTextContent('65');
-    expect(rows[1]).toHaveTextContent('67');
-    expect(rows[1]).toHaveTextContent('46');
-    expect(rows[1]).toHaveTextContent('100');
-
-    expect(rows[2]).toHaveTextContent('2');
-    expect(rows[2]).toHaveTextContent('Ivysaur');
-    expect(rows[2]).toHaveTextContent('Poison, Fire');
-    expect(rows[2]).toHaveTextContent('60');
-    expect(rows[2]).toHaveTextContent('62');
-    expect(rows[2]).toHaveTextContent('63');
-    expect(rows[2]).toHaveTextContent('81');
-    expect(rows[2]).toHaveTextContent('80');
-    expect(rows[2]).toHaveTextContent('69');
-    expect(rows[2]).toHaveTextContent('100');
+    tableProps.pokemonList.forEach((pokemon) => {
+      expect(screen.getByText(pokemon.id)).toBeInTheDocument();
+      expect(screen.getByText(pokemon.name)).toBeInTheDocument();
+      expect(screen.getByText(pokemon.type.join(', '))).toBeInTheDocument();
+      expect(screen.getByText(pokemon.hp)).toBeInTheDocument();
+      expect(screen.getByText(pokemon.speed)).toBeInTheDocument();
+      expect(screen.getByText(pokemon.attack)).toBeInTheDocument();
+      expect(screen.getByText(pokemon.special_attack)).toBeInTheDocument();
+      expect(screen.getByText(pokemon.defense)).toBeInTheDocument();
+      expect(screen.getByText(pokemon.special_defense)).toBeInTheDocument();
+    });
   });
 
-  it('Calls calculatePokemonPower for each Pokémon', () => {
+  it('Calculates and displays the Pokemon power for each row', () => {
     setupComponent();
 
-    expect(calculatePokemonPower).toHaveBeenCalledWith(
-      tableProps.pokemonList[0]
-    );
-    expect(calculatePokemonPower).toHaveBeenCalledWith(
-      tableProps.pokemonList[1]
+    expect(calculatePokemonPower).toHaveBeenCalledWith({
+      attack: tableProps.pokemonList[0].attack,
+      defense: tableProps.pokemonList[0].defense,
+      hp: tableProps.pokemonList[0].hp,
+      special_attack: tableProps.pokemonList[0].special_attack,
+      special_defense: tableProps.pokemonList[0].special_defense,
+      speed: tableProps.pokemonList[0].speed,
+    });
+    expect(screen.getAllByText('100')).toHaveLength(
+      tableProps.pokemonList.length
     );
   });
 
-  test('Renders no rows when pokemonList is empty', () => {
-    render(<Table pokemonList={[]} />);
+  it('Navigates to the correct detail page when a row is clicked', () => {
+    setupComponent();
 
-    const rows = screen.queryAllByRole('row');
+    const firstRow = screen
+      .getByText(tableProps.pokemonList[0].name)
+      .closest('tr');
 
-    expect(rows).toHaveLength(1);
+    fireEvent.click(firstRow!);
+
+    expect(mockPush).toHaveBeenCalledWith(
+      `/pokemon/${tableProps.pokemonList[0].id}`
+    );
   });
 });

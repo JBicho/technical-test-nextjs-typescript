@@ -11,9 +11,37 @@ import {
   ImageContainer,
   TypesList,
 } from './Styles';
-import { MAX_METER_VALUE } from '../../common/constants';
+import {
+  MAX_ID,
+  MAX_METER_VALUE,
+  NAVIGATE_NEXT,
+  NAVIGATE_PREV,
+} from '../../common/constants';
+import { logger } from '../../common/utils/logger';
+import { useRouter } from 'next/router';
 
 const PokemonPage = (props: Pokemon) => {
+  const router = useRouter();
+
+  const { id } = router.query;
+
+  const handleNavigation = (direction: 'next' | 'prev') => {
+    let newId = Number(id as string);
+
+    if (direction === 'next') {
+      newId += 1;
+    }
+
+    if (direction === 'prev') {
+      newId -= 1;
+    }
+
+    if (newId < 1) return;
+    if (newId > MAX_ID) return;
+
+    router.push(`/pokemon/${newId}`);
+  };
+
   return (
     <>
       <Head>
@@ -81,8 +109,18 @@ const PokemonPage = (props: Pokemon) => {
           </Details>
 
           <DetailViewNavigation>
-            <button>Previous</button>
-            <button>Next</button>
+            <button
+              disabled={Number(id) === 1}
+              onClick={() => handleNavigation(NAVIGATE_PREV)}
+            >
+              Previous
+            </button>
+            <button
+              disabled={Number(id) === MAX_ID}
+              onClick={() => handleNavigation(NAVIGATE_NEXT)}
+            >
+              Next
+            </button>
           </DetailViewNavigation>
         </DetailView>
       </Card>
@@ -95,27 +133,26 @@ PokemonPage.getLayout = Layout;
 export async function getServerSideProps({
   params: { id },
 }: {
-  params: { id: number };
+  params: { id: string };
 }) {
   try {
-    // Implement new endpoint in /api/pokemon/[id].ts and use it here
-    const pokemonExample: Pokemon = {
-      id: id,
-      name: 'Bulbasaur',
-      type: ['Grass', 'Poison'],
-      hp: 45,
-      attack: 49,
-      defense: 49,
-      special_attack: 65,
-      special_defense: 65,
-      speed: 45,
-    };
-    return { props: pokemonExample };
+    const res = await fetch(`${process.env.BASE_URL}/api/pokemon/${id}`);
+
+    if (!res.ok) {
+      return {
+        notFound: true,
+      };
+    }
+
+    const pokemon: Pokemon = await res.json();
+
+    return { props: pokemon };
   } catch (error) {
+    logger.error('Error while fetching Pokemon data');
+
     return {
       notFound: true,
     };
   }
 }
-
 export default PokemonPage;

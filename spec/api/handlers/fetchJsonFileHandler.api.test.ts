@@ -21,8 +21,7 @@ jest.mock('../../../common/utils/logger', () => ({
   },
 }));
 
-describe('fetchJsonFileHandler', () => {
-  // Type the mocked functions for better IDE support
+describe('Test fetchJsonFileHandler', () => {
   const mockedReadFile = fs.promises.readFile as jest.MockedFunction<
     typeof fs.promises.readFile
   >;
@@ -34,7 +33,7 @@ describe('fetchJsonFileHandler', () => {
     mockedJoin.mockReturnValue('/mock/path/to/pokemon.json');
   });
 
-  it('should successfully fetch and return JSON data', async () => {
+  it('Should successfully fetch and return JSON data', async () => {
     const mockData = {
       pokemon: [
         { id: 1, name: 'Bulbasaur' },
@@ -64,7 +63,7 @@ describe('fetchJsonFileHandler', () => {
     expect(logger.error).not.toHaveBeenCalled();
   });
 
-  it('should handle file read errors properly', async () => {
+  it('Should handle file read errors properly', async () => {
     mockedReadFile.mockRejectedValue(new Error('File not found'));
 
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>();
@@ -73,12 +72,12 @@ describe('fetchJsonFileHandler', () => {
 
     expect(res._getStatusCode()).toBe(500);
     expect(JSON.parse(res._getData())).toEqual({
-      message: 'Failed to fetch the JSON file',
+      message: 'Internal Server Error',
     });
     expect(logger.error).toHaveBeenCalledWith('Failed to fetch the JSON file');
   });
 
-  it('should handle JSON parsing errors', async () => {
+  it('Should handle JSON parsing errors', async () => {
     mockedReadFile.mockResolvedValue('invalid json content');
 
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>();
@@ -87,12 +86,12 @@ describe('fetchJsonFileHandler', () => {
 
     expect(res._getStatusCode()).toBe(500);
     expect(JSON.parse(res._getData())).toEqual({
-      message: 'Failed to fetch the JSON file',
+      message: 'Internal Server Error',
     });
     expect(logger.error).toHaveBeenCalledWith('Failed to fetch the JSON file');
   });
 
-  it('should use correct file path construction', async () => {
+  it('Should use correct file path construction', async () => {
     const mockData = { pokemon: [] };
     mockedReadFile.mockResolvedValue(JSON.stringify(mockData));
 
@@ -110,7 +109,7 @@ describe('fetchJsonFileHandler', () => {
     expect(mockedJoin).toHaveBeenCalledTimes(1);
   });
 
-  it('should handle empty JSON file', async () => {
+  it('Should handle empty JSON file', async () => {
     mockedReadFile.mockResolvedValue('{}');
 
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>();
@@ -122,7 +121,7 @@ describe('fetchJsonFileHandler', () => {
     expect(logger.error).not.toHaveBeenCalled();
   });
 
-  it('should handle large JSON files', async () => {
+  it('Should handle large JSON files', async () => {
     const largeMockData = {
       pokemon: Array.from({ length: 1000 }, (_, i) => ({
         id: i + 1,

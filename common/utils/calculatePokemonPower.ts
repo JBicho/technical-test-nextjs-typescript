@@ -1,9 +1,16 @@
 import { Pokemon } from '../interfaces/pokemon';
 
-export const calculatePokemonPower = (pokemon: Pokemon) =>
-  pokemon.hp +
-  pokemon.speed +
-  pokemon.attack +
-  pokemon.special_attack +
-  pokemon.defense +
-  pokemon.special_defense;
+type PartialPokemonProperties = Pick<
+  Pokemon,
+  'hp' | 'speed' | 'attack' | 'special_attack' | 'defense' | 'special_defense'
+>;
+
+export const calculatePokemonPower = ({
+  attack,
+  defense,
+  hp,
+  special_attack,
+  special_defense,
+  speed,
+}: PartialPokemonProperties) =>
+  hp + speed + attack + special_attack + defense + special_defense;

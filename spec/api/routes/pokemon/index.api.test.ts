@@ -1,103 +1,78 @@
+import fs from 'fs';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { createMocks } from 'node-mocks-http';
-import { handler } from '../../../../pages/api/pokemon';
+import getPokemonData from '../../../../pages/api/pokemon';
 
-jest.mock('../../../../pages/api/pokemon', () => ({
-  handler: jest.fn(),
-}));
+describe('Test getPokemonData API endpoint', () => {
+  let mockedResponseSend: jest.Mock<any, any>;
+  let mockedResponse: NextApiResponse;
 
-describe('getPokemonData API Handler', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    mockedResponseSend = jest.fn();
+    mockedResponse = {
+      status: jest.fn().mockReturnThis(),
+      json: mockedResponseSend,
+    } as unknown as NextApiResponse;
   });
 
-  it('Should call handler with correct request and response objects', async () => {
-    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-      method: 'GET',
-    });
-
-    await handler(req, res);
-
-    expect(handler).toHaveBeenCalledWith(req, res);
-    expect(handler).toHaveBeenCalledTimes(1);
-  });
-
-  it('Should handle success response from handler', async () => {
-    const mockPokemonData = [
-      { id: 1, name: 'Bulbasaur' },
-      { id: 2, name: 'Ivysaur' },
-    ];
-
-    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-      method: 'GET',
-    });
-
-    (handler as jest.Mock).mockImplementationOnce(async (_, res) => {
-      res.status(200).json(mockPokemonData);
-    });
-
-    await handler(req, res);
-
-    expect(res._getStatusCode()).toBe(200);
-    expect(JSON.parse(res._getData())).toEqual(mockPokemonData);
-  });
-
-  it('Should handle error response from handler', async () => {
-    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-      method: 'GET',
-    });
-
-    const errorMessage = 'Internal Server Error';
-    (handler as jest.Mock).mockImplementationOnce(async (_, res) => {
-      res.status(500).json({ error: errorMessage });
-    });
-
-    await handler(req, res);
-
-    expect(res._getStatusCode()).toBe(500);
-    expect(JSON.parse(res._getData())).toEqual({ error: errorMessage });
-  });
-
-  it('Should handle different HTTP methods', async () => {
-    const { req: postReq, res: postRes } = createMocks<
-      NextApiRequest,
-      NextApiResponse
-    >({
-      method: 'POST',
-      body: { name: 'New Pokemon' },
-    });
-
-    await handler(postReq, postRes);
-    expect(handler).toHaveBeenCalledWith(postReq, postRes);
-
-    const { req: putReq, res: putRes } = createMocks<
-      NextApiRequest,
-      NextApiResponse
-    >({
-      method: 'PUT',
-      body: { id: 1, name: 'Updated Pokemon' },
-    });
-
-    await handler(putReq, putRes);
-    expect(handler).toHaveBeenCalledWith(putReq, putRes);
-  });
-
-  it('should handle query parameters', async () => {
-    const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
-      method: 'GET',
-      query: { limit: '10', offset: '0' },
-    });
-
-    await handler(req, res);
-
-    expect(handler).toHaveBeenCalledWith(
-      expect.objectContaining({
-        query: expect.objectContaining({
-          limit: '10',
-          offset: '0',
-        }),
-      }),
-      res
+  it('Should return 200 status and JSON data', async () => {
+    const readFileSpy = jest.spyOn(fs.promises, 'readFile').mockResolvedValue(
+      JSON.stringify([
+        { name: 'Pikachu', type: 'Electric' },
+        { name: 'Bulbasaur', type: 'Grass/Poison' },
+      ])
     );
+
+    const mockedRequest = {
+      method: 'GET',
+      url: '/api/pokemon-data',
+    } as NextApiRequest;
+
+    await getPokemonData(mockedRequest, mockedResponse);
+
+    expect(readFileSpy).toHaveBeenCalledWith(
+      expect.stringContaining('pokemon.json'),
+      'utf-8'
+    );
+    expect(mockedResponse.status).toHaveBeenCalledWith(200);
+    expect(mockedResponseSend).toHaveBeenCalledWith([
+      { name: 'Pikachu', type: 'Electric' },
+      { name: 'Bulbasaur', type: 'Grass/Poison' },
+    ]);
+  });
+
+  it('Should handle errors and return a 500 status', async () => {
+    const readFileSpy = jest
+      .spyOn(fs.promises, 'readFile')
+      .mockRejectedValue(new Error('Internal Server Error'));
+
+    const mockedRequest = {
+      method: 'GET',
+      url: '/api/pokemon-data',
+    } as NextApiRequest;
+
+    await getPokemonData(mockedRequest, mockedResponse);
+
+    expect(readFileSpy).toHaveBeenCalledWith(
+      expect.stringContaining('pokemon.json'),
+      'utf-8'
+    );
+    expect(mockedResponse.status).toHaveBeenCalledWith(500);
+    expect(mockedResponseSend).toHaveBeenCalledWith({
+      message: 'Internal Server Error',
+    });
+  });
+
+  it('Should return 405 status for unsupported HTTP methods', async () => {
+    const mockedRequest = {
+      method: 'POST',
+      url: '/api/pokemon-data',
+    } as NextApiRequest;
+
+    await getPokemonData(mockedRequest, mockedResponse);
+
+    expect(mockedResponse.status).toHaveBeenCalledWith(405);
+    expect(mockedResponseSend).toHaveBeenCalledWith({
+      message: 'Method Not Allowed',
+    });
   });
 });

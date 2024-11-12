@@ -5,13 +5,15 @@ export interface SearchInputProps {
   label: string;
   id: string;
   placeholder: string;
-  onSearch: (input: string) => void;
+  value: string;
+  onSearch: (value: string) => void;
 }
 
 export const SearchInput = ({
   label,
   id,
   placeholder = 'Search a parameter',
+  value,
   onSearch,
 }: SearchInputProps) => {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -25,6 +27,7 @@ export const SearchInput = ({
         id={id}
         type="search"
         placeholder={placeholder}
+        value={value}
         onChange={handleChange}
         aria-label="Search input"
         aria-describedby="search-help-text"
