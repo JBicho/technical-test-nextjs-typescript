@@ -20,7 +20,7 @@ const ImageContainer = styled.div`
   img {
     border-radius: 50%;
     object-fit: cover;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: var(--global-box-shadow);
     border: 2px solid rgba(255, 255, 255, 0.3);
     background-color: rgba(255, 255, 255, 0.15);
     backdrop-filter: blur(10px) saturate(180%);

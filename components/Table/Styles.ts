@@ -2,8 +2,8 @@ import styled from 'styled-components';
 
 const StyledTable = styled.table`
   width: 100%;
-  max-width: 900px;
-  min-width: 900px;
+  max-width: var(--global-max-width);
+  min-width: var(--global-max-width);
   margin: 20px auto;
   border-spacing: 0;
   border-radius: 12px;

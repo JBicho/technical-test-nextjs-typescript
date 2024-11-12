@@ -32,7 +32,7 @@ const OverlayPattern = styled.div`
 const Menu = styled.nav`
   position: fixed;
   background: rgba(110, 142, 249, 1);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--global-box-shadow);
   width: 100%;
   top: 0;
   padding: var(--global-rhythm);
