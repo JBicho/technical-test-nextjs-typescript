@@ -28,8 +28,11 @@ jobs:
       - name: Lint the code
         run: npm run lint
 
-      - name: Run Jest tests
-        run: npm test
+      - name: Run Client tests
+        run: npm run test:client
+
+      - name: Run API test
+        run: npm run test:api
 
       - name: Build the project
         run: npm run build
