@@ -22,34 +22,35 @@
 
 ## Introduction
 
-This project is a technical test for a job application at Gold Avenue.
-The goal is to create a web application using Next.js and Typescript. The application must be able to display a list of pokemons and their details.
+This project is a technical test for a job application at Gold Avenue. 
+The goal is to create a web application using Next.js and Typescript. The application must be able to display a list of Pokemons and their details.
+
 
 - Fork this repository on your account
 - Create a new branch
-- Open a pull request on `main` branch
+- Open a pull request on the `main` branch
 - If possible, host the project on a platform like Vercel, Netlify, Heroku, etc. for easier review
 
 ### Requirements
 
 #### Pokemon List
 
-- We want to see all the pokemon on the page by default.
-- We can search by name every pokemon and you must show every pokemon matched with the searched string.
-- Threshold Power field: When you put a value (pokemon power), you must update the count value and count every pokemon with the power threshold. Example: if you put 319, you must return every pokemon with power strictly above 319.
+- We want to see all the Pokemon on the page by default (You can use pagination if you think this would cause a performance issue).
+- We can search by name every Pokemon and you must show every Pokemon matched with the searched string.
+- Threshold Power field: When you put a value (pokemon power), you must update the count value and count every Pokemon with the power threshold. For example: if you put 319, you must return every Pokemon with power strictly above 319.
 - Count: must show the current count of pokemon returned by your search input and/or power threshold.
-- Min: you must return the minium pokemon power of the list. It must be worked with search
-- Max: you must return the maximum pokemon power of the list. It must be worked with search
+- Min: you must return the minimum Pokemon power of the list. It must be worked with a search
+- Max: you must return the maximum Pokemon power of the list. It must be worked with a search
   Example : [Search part](with-search.png) [Power threshold part](with-threshold.png).
 
 #### Pokemon view
 
-- When you click on a row (pokemon in table), you must show this pokemon in a new page (Page pokemon ex: /pokemon/2344). You must show in this page, all properties of pokemon and this image (available in public/images folder).
-  A next button and a previous button must be display to access on previous or next pokemon (based on id logic).
+- When you click on a row (pokemon in table), you must show this Pokemon on a new page (Page pokemon ex: /pokemon/2344). You must show on this page, all properties of Pokemon and this image (available in the public/images folder). 
+A next button and a previous button must be displayed to access the previous or next Pokemon (based on ID logic).
 
 #### Unit test
 
-- Make unit test on components, helpers, endpoint, ...
+- Make unit tests on components, helpers, endpoint, ...
 
 ## Getting Started
 
