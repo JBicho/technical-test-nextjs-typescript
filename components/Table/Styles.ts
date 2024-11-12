@@ -51,7 +51,7 @@ const TableBody = styled.tbody`
 
 const EmptyListTd = styled.td`
   text-align: center !important;
-`
+`;
 
 const TableFooter = styled.tfoot`
   td {

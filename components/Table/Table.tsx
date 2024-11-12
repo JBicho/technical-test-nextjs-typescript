@@ -31,7 +31,7 @@ export const Table = ({
 }: TableProps) => {
   const router = useRouter();
   const [isNavigating, setIsNavigating] = useState(false);
-  
+
   const handleRowClick = async (id: number) => {
     if (isNavigating) return;
 
@@ -44,7 +44,6 @@ export const Table = ({
       if (error?.message !== 'Loading initial props cancelled') {
         console.error('Navigation error:', error);
       }
-
     } finally {
       setIsNavigating(false);
     }
