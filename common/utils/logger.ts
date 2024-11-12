@@ -7,7 +7,7 @@ interface LogMessage {
   data?: unknown;
 }
 
-class Logger {
+export class Logger {
   private isServer = typeof window === 'undefined';
   private isDev = process.env.NODE_ENV === 'development';
 
@@ -33,17 +33,20 @@ class Logger {
 
   error(message: string, data?: unknown): void {
     const logMessage = this.formatMessage('error', message, data);
+
     console.error(JSON.stringify(logMessage, null, 2));
   }
 
   warn(message: string, data?: unknown): void {
     const logMessage = this.formatMessage('warn', message, data);
+
     console.warn(JSON.stringify(logMessage, null, 2));
   }
 
   debug(message: string, data?: unknown): void {
     if (this.isDev) {
       const logMessage = this.formatMessage('debug', message, data);
+      
       console.debug(JSON.stringify(logMessage, null, 2));
     }
   }
