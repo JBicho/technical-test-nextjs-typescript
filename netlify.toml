@@ -8,10 +8,12 @@
 [functions]
   included_files = [
     "node_modules/sharp/**/*",
-    "pages/api/data/**/*"  # Include the data directory
+    "pages/api/data/**/*",
+    "public/images/**/*"
   ]
 
 [build.environment]
   NEXT_USE_NETLIFY_EDGE = "true"
   NEXT_SHARP_PATH = "/node_modules/sharp"
   POKEMON_DATA_PATH = "pages/api/data/pokemon.json"
+  BASE_URL = "https://gold-avenue-tech-challenge.netlify.app/" 
