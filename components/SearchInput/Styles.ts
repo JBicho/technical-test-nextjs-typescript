@@ -6,6 +6,7 @@ const StyledContainer = styled.div`
 
 const StyledSearchInput = styled.input`
   background-color: var(--global-accent-color);
+  color: var(--global-color);
   padding: 12px 20px;
   border: 2px solid #6e8ef9;
   border-radius: 8px;
