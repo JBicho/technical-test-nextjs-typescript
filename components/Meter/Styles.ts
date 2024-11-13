@@ -17,7 +17,11 @@ const StyledMeter = styled.meter`
   &::-webkit-meter-bar {
     background-color: var(--global-accent-color);
     border-radius: 10px;
-    background-image: linear-gradient(to right, var(--global-accent-color), var(--global-accent-color));
+    background-image: linear-gradient(
+      to right,
+      var(--global-accent-color),
+      var(--global-accent-color)
+    );
   }
 
   &::-webkit-meter-value {
@@ -28,7 +32,11 @@ const StyledMeter = styled.meter`
   &::-moz-meter-bar {
     background-color: var(--global-accent-color);
     border-radius: 10px;
-    background-image: linear-gradient(to right, var(--global-accent-color), var(--global-accent-color));
+    background-image: linear-gradient(
+      to right,
+      var(--global-accent-color),
+      var(--global-accent-color)
+    );
   }
 `;
 
