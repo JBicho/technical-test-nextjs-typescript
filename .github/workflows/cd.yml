@@ -19,7 +19,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18.17.0'
+          node-version: '20'
 
       - name: Install dependencies
         run: |
@@ -48,7 +48,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18.17.0'
+          node-version: '20'
 
       - name: Install dependencies
         run: |
@@ -60,7 +60,7 @@ jobs:
       - name: Deploy to Netlify
         uses: nwtgck/actions-netlify@v3
         with:
-          publish-dir: '.next'
+          publish-dir: 'out'
           production-branch: 'feature/add-challenge-solution'
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
