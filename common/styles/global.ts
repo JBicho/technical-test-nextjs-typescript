@@ -5,6 +5,8 @@ const GlobalStyles = createGlobalStyle`
       --global-rhythm: 1.5rem;
       --global-box-shadow: box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
       --global-max-width: 700px;
+      --global-color: #ffffff;
+      --global-accent-color: #2a2a2a;
     }
 
     html {
@@ -17,6 +19,7 @@ const GlobalStyles = createGlobalStyle`
       margin: 0;
       height: 100%;
       font-family: 'Poppins', sans-serif;
+      color: var(--global-color);
     }
 
     a {
@@ -27,7 +30,7 @@ const GlobalStyles = createGlobalStyle`
     button {
       width: 150px;
       padding: calc(var(--global-rhythm) / 2);
-      background-color: #2a2a2a;                               
+      background-color: var(--global-accent-color);                               
       border: none;               
       border-radius: 5px;         
       cursor: pointer;           
@@ -35,6 +38,7 @@ const GlobalStyles = createGlobalStyle`
       overflow: hidden;           
       transition: background-color 0.3s ease, transform 0.2s ease; 
       font-family: 'Poppins', sans-serif;
+      color: var(--global-color);
     }
 
     button:hover {
@@ -49,16 +53,6 @@ const GlobalStyles = createGlobalStyle`
 
     * {
       box-sizing: border-box;
-    }
-
-    @media (prefers-color-scheme: dark) {
-      html {
-          color-scheme: dark;
-      }
-      body {
-          color: white;
-          background: black;
-      }
     }
 `;
 

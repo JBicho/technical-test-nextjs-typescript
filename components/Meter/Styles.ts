@@ -15,9 +15,9 @@ const StyledMeter = styled.meter`
   overflow: hidden;
 
   &::-webkit-meter-bar {
-    background-color: #2a2a2a;
+    background-color: var(--global-accent-color);
     border-radius: 10px;
-    background-image: linear-gradient(to right, #2a2a2a, #2a2a2a);
+    background-image: linear-gradient(to right, var(--global-accent-color), var(--global-accent-color));
   }
 
   &::-webkit-meter-value {
@@ -26,9 +26,9 @@ const StyledMeter = styled.meter`
   }
 
   &::-moz-meter-bar {
-    background-color: #2a2a2a;
+    background-color: var(--global-accent-color);
     border-radius: 10px;
-    background-image: linear-gradient(to right, #2a2a2a, #2a2a2a);
+    background-image: linear-gradient(to right, var(--global-accent-color), var(--global-accent-color));
   }
 `;
 
