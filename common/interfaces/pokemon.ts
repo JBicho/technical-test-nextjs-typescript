@@ -1,4 +1,4 @@
-export interface Pokemon {
+interface Pokemon {
   id: number;
   name: string;
   type: string[];
@@ -9,3 +9,5 @@ export interface Pokemon {
   special_defense: number;
   speed: number;
 }
+
+export type { Pokemon };

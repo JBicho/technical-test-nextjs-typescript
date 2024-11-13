@@ -1,0 +1,89 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Layout Component Should match snapshot when on homepage 1`] = `
+<DocumentFragment>
+  <div
+    class="Styles__Background-sc-1o8hx7p-0 dKNCZO"
+  >
+    <div
+      class="Styles__OverlayPattern-sc-1o8hx7p-1 kEikSX"
+    />
+    <nav
+      class="Styles__Menu-sc-1o8hx7p-2 iABhsv"
+    >
+      <a
+        href="#"
+      >
+        <span
+          aria-disabled="true"
+        >
+          <img
+            alt="Pokeball Image"
+            height="60"
+            src="/images/pokeball.png"
+            width="60"
+          />
+          <span>
+            Home
+          </span>
+        </span>
+      </a>
+    </nav>
+    <div
+      class="Styles__Container-sc-1o8hx7p-3 iOvVmP"
+    >
+      <div
+        class="Styles__Main-sc-1o8hx7p-4 hDokoW"
+      >
+        <div>
+          Mock Page Content
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Layout Component Should match snapshot with a mock page 1`] = `
+<DocumentFragment>
+  <div
+    class="Styles__Background-sc-1o8hx7p-0 dKNCZO"
+  >
+    <div
+      class="Styles__OverlayPattern-sc-1o8hx7p-1 kEikSX"
+    />
+    <nav
+      class="Styles__Menu-sc-1o8hx7p-2 iABhsv"
+    >
+      <a
+        href="/"
+      >
+        <span
+          aria-disabled="false"
+        >
+          <img
+            alt="Pokeball Image"
+            height="60"
+            src="/images/pokeball.png"
+            width="60"
+          />
+          <span>
+            Home
+          </span>
+        </span>
+      </a>
+    </nav>
+    <div
+      class="Styles__Container-sc-1o8hx7p-3 iOvVmP"
+    >
+      <div
+        class="Styles__Main-sc-1o8hx7p-4 hDokoW"
+      >
+        <div>
+          Mock Page Content
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;

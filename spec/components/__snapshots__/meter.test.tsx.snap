@@ -1,0 +1,22 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test Meter Component Renders correctly and matches the snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="Styles__MeterContainer-sc-6555pb-0 kwYyGg"
+  >
+    <label
+      for="someID"
+    >
+      Some Label
+    </label>
+    <meter
+      class="Styles__StyledMeter-sc-6555pb-1 eeEkfZ"
+      id="someID"
+      max="100"
+      min="0"
+      value="50"
+    />
+  </div>
+</DocumentFragment>
+`;

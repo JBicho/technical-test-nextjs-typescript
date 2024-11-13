@@ -1,6 +1,7 @@
-import { NextPage } from "next";
-import type { AppProps } from "next/app";
-import { ReactElement, ReactNode } from "react";
+import { NextPage } from 'next';
+import type { AppProps } from 'next/app';
+import { ReactElement, ReactNode } from 'react';
+import { GlobalStyles } from '../common/styles/global';
 
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode;
@@ -18,7 +19,12 @@ function App({ Component, pageProps }: AppPropsWithLayout) {
       return page;
     });
 
-  return getLayout(<Component {...pageProps} />);
+  return getLayout(
+    <>
+      <GlobalStyles />
+      <Component {...pageProps} />
+    </>
+  );
 }
 
 export default App;

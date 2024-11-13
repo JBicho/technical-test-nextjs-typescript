@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test Counter Component Renders correctly and matches the snapshot 1`] = `
+<DocumentFragment>
+  <section
+    class="Styles__StyledSection-sc-3x6sym-0 eodnVs"
+  >
+    <p
+      aria-live="polite"
+      role="status"
+    >
+      Count:
+      <span>
+        <strong>
+          239
+        </strong>
+      </span>
+    </p>
+    <p>
+      Min:
+      <span>
+        <strong>
+          100
+        </strong>
+      </span>
+    </p>
+    <p>
+      Max:
+      <span>
+        <strong>
+          235
+        </strong>
+      </span>
+    </p>
+  </section>
+</DocumentFragment>
+`;
