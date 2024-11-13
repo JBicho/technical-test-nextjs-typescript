@@ -22,6 +22,23 @@ import {
   TypesList,
 } from '../../components/Pokemon/Styles';
 
+const shimmer = (w: number, h: number): string => `
+<svg width="${w}" height="${h}" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <defs>
+    <linearGradient id="g">
+      <stop stop-color="#eee" offset="20%" />
+      <stop stop-color="#f5f5f5" offset="50%" />
+      <stop stop-color="#eee" offset="70%" />
+    </linearGradient>
+  </defs>
+  <rect width="${w}" height="${h}" fill="#eee" />
+  <rect id="r" width="${w}" height="${h}" fill="url(#g)" />
+</svg>`;
+
+const toBase64 = (str: string): string =>
+  typeof window === 'undefined'
+    ? Buffer.from(str).toString('base64')
+    : window.btoa(str);
 const getBaseUrl = () => {
   if (typeof window !== 'undefined') {
     return '';
@@ -90,7 +107,10 @@ const PokemonPage = (props: PokemonPageProps) => {
                 alt={`${props.name} Pokemon`}
                 width={250}
                 height={250}
+                quality={85}
                 priority
+                placeholder="blur"
+                blurDataURL={`data:image/svg+xml;base64,${toBase64(shimmer(250, 250))}`}
               />
             </ImageContainer>
             <h2>Type</h2>
