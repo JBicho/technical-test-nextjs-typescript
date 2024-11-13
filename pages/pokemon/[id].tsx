@@ -21,6 +21,8 @@ import {
   NavAndDetails,
   TypesList,
 } from '../../components/Pokemon/Styles';
+import { useEffect } from 'react';
+import Link from 'next/link';
 
 const shimmer = (w: number, h: number): string => `
 <svg width="${w}" height="${h}" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -164,20 +166,30 @@ const PokemonPage = (props: PokemonPageProps) => {
             </Details>
 
             <DetailViewNavigation>
-              <button
-                onClick={() => handleNavigation(NAVIGATE_PREV)}
-                disabled={Number(id) === 1}
+              <Link
+                href={`/pokemon/${Number(id) - 1}`}
+                prefetch={true}
                 aria-label="View previous Pokemon"
               >
-                Previous
-              </button>
-              <button
-                onClick={() => handleNavigation(NAVIGATE_NEXT)}
-                disabled={Number(id) === MAX_ID}
+                <button
+                  disabled={Number(id) === 1}
+                  aria-label="View previous Pokemon"
+                >
+                  Previous
+                </button>
+              </Link>
+              <Link
+                href={`/pokemon/${Number(id) + 1}`}
+                prefetch={true}
                 aria-label="View next Pokemon"
               >
-                Next
-              </button>
+                <button
+                  disabled={Number(id) === MAX_ID}
+                  aria-label="View next Pokemon"
+                >
+                  Next
+                </button>
+              </Link>
             </DetailViewNavigation>
           </NavAndDetails>
         </DetailView>
