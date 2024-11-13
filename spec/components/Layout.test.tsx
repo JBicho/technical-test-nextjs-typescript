@@ -68,8 +68,8 @@ describe('Layout Component', () => {
     const image = getByAltText('Pokeball Image');
     const link = getByRole('link', { name: /home/i });
 
-    expect(image).toHaveAttribute('width', '96');
-    expect(image).toHaveAttribute('height', '96');
+    expect(image).toHaveAttribute('width', '60');
+    expect(image).toHaveAttribute('height', '60');
     expect(link).toHaveAttribute('href', '/');
   });
 });

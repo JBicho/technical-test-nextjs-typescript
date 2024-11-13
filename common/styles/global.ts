@@ -4,7 +4,7 @@ const GlobalStyles = createGlobalStyle`
     :root {
       --global-rhythm: 1.5rem;
       --global-box-shadow: box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-      --global-max-width: 900px;
+      --global-max-width: 700px;
     }
 
     html {

@@ -19,9 +19,9 @@ exports[`Layout Component Should match snapshot when on homepage 1`] = `
         >
           <img
             alt="Pokeball Image"
-            height="96"
+            height="60"
             src="/images/pokeball.png"
-            width="96"
+            width="60"
           />
           <span>
             Home
@@ -63,9 +63,9 @@ exports[`Layout Component Should match snapshot with a mock page 1`] = `
         >
           <img
             alt="Pokeball Image"
-            height="96"
+            height="60"
             src="/images/pokeball.png"
-            width="96"
+            width="60"
           />
           <span>
             Home

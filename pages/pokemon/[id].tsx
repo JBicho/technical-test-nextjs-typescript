@@ -17,6 +17,8 @@ import {
   DetailViewNavigation,
   Details,
   ImageContainer,
+  NameAndImage,
+  NavAndDetails,
   TypesList,
 } from '../../components/Pokemon/Styles';
 
@@ -79,19 +81,18 @@ const PokemonPage = (props: PokemonPageProps) => {
       </Head>
       <Card>
         <DetailView>
-          <h1>{props.name}</h1>
+          <NameAndImage>
+            <h1>{props.name}</h1>
 
-          <ImageContainer>
-            <Image
-              src={`/images/${props.name.toLowerCase()}.jpg`}
-              alt={`${props.name} Pokemon`}
-              width={250}
-              height={250}
-              priority
-            />
-          </ImageContainer>
-
-          <Details>
+            <ImageContainer>
+              <Image
+                src={`/images/${props.name.toLowerCase()}.jpg`}
+                alt={`${props.name} Pokemon`}
+                width={250}
+                height={250}
+                priority
+              />
+            </ImageContainer>
             <h2>Type</h2>
             <TypesList>
               {props.type.map((type) => (
@@ -100,61 +101,65 @@ const PokemonPage = (props: PokemonPageProps) => {
                 </li>
               ))}
             </TypesList>
+          </NameAndImage>
 
-            <Meter
-              id="hp-meter"
-              label="HP"
-              value={props.hp}
-              max={MAX_METER_VALUE}
-            />
-            <Meter
-              id="attack-meter"
-              label="Attack"
-              value={props.attack}
-              max={MAX_METER_VALUE}
-            />
-            <Meter
-              id="defense-meter"
-              label="Defense"
-              value={props.defense}
-              max={MAX_METER_VALUE}
-            />
-            <Meter
-              id="special_attack-meter"
-              label="Special Attack"
-              value={props.special_attack}
-              max={MAX_METER_VALUE}
-            />
-            <Meter
-              id="special_defense-meter"
-              label="Special Defense"
-              value={props.special_defense}
-              max={MAX_METER_VALUE}
-            />
-            <Meter
-              id="speed-meter"
-              label="Speed"
-              value={props.speed}
-              max={MAX_METER_VALUE}
-            />
-          </Details>
+          <NavAndDetails>
+            <Details>
+              <Meter
+                id="hp-meter"
+                label="HP"
+                value={props.hp}
+                max={MAX_METER_VALUE}
+              />
+              <Meter
+                id="attack-meter"
+                label="Attack"
+                value={props.attack}
+                max={MAX_METER_VALUE}
+              />
+              <Meter
+                id="defense-meter"
+                label="Defense"
+                value={props.defense}
+                max={MAX_METER_VALUE}
+              />
+              <Meter
+                id="special_attack-meter"
+                label="Special Attack"
+                value={props.special_attack}
+                max={MAX_METER_VALUE}
+              />
+              <Meter
+                id="special_defense-meter"
+                label="Special Defense"
+                value={props.special_defense}
+                max={MAX_METER_VALUE}
+              />
+              <Meter
+                id="speed-meter"
+                label="Speed"
+                value={props.speed}
+                max={MAX_METER_VALUE}
+              />
+            </Details>
 
-          <DetailViewNavigation>
-            <button
-              onClick={() => handleNavigation(NAVIGATE_PREV)}
-              disabled={Number(id) === 1}
-              aria-label="View previous Pokemon"
-            >
-              Previous
-            </button>
-            <button
-              onClick={() => handleNavigation(NAVIGATE_NEXT)}
-              disabled={Number(id) === MAX_ID}
-              aria-label="View next Pokemon"
-            >
-              Next
-            </button>
-          </DetailViewNavigation>
+            <DetailViewNavigation>
+              <button
+                onClick={() => handleNavigation(NAVIGATE_PREV)}
+                disabled={Number(id) === 1}
+                aria-label="View previous Pokemon"
+              >
+                Previous
+              </button>
+              <button
+                onClick={() => handleNavigation(NAVIGATE_NEXT)}
+                disabled={Number(id) === MAX_ID}
+                aria-label="View next Pokemon"
+              >
+                Next
+              </button>
+            </DetailViewNavigation>
+          </NavAndDetails>
         </DetailView>
       </Card>
     </>

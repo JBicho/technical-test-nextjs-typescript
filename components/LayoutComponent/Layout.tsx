@@ -14,8 +14,8 @@ export const Layout = (page: ReactElement): JSX.Element => {
               priority={true}
               src="/images/pokeball.png"
               alt="Pokeball Image"
-              width={96}
-              height={96}
+              width={60}
+              height={60}
             />
             <span>Home</span>
           </ConditionalLink>

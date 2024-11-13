@@ -9,6 +9,34 @@ const DetailView = styled.div`
   h1 {
     margin: 0 0 calc(2 * var(--global-rhythm)) 0;
   }
+
+  @media (orientation: landscape),
+    (min-height: 933px) and (max-height: 1100px) {
+    flex-direction: row;
+    justify-content: center;
+    align-items: baseline;
+
+    h1 {
+      margin: 0 0 var(--global-rhythm) 0;
+    }
+  }
+`;
+
+const NameAndImage = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+`;
+
+const NavAndDetails = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  @media (orientation: landscape), (max-width: 768px) {
+    padding: var(--global-rhythm);
+    align-self: self-end;
+  }
 `;
 
 const ImageContainer = styled.div`
@@ -32,6 +60,15 @@ const ImageContainer = styled.div`
       transform: scale(1.1);
       box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
     }
+
+    @media (max-width: 430px) {
+      width: 150px;
+      height: 150px;
+    }
+  }
+
+  @media (orientation: landscape) {
+    justify-content: left;
   }
 `;
 
@@ -47,6 +84,10 @@ const DetailViewNavigation = styled.div`
     &:disabled {
       cursor: not-allowed;
     }
+
+    @media (orientation: landscape), (max-width: 768px) {
+      width: 120px;
+    }
   }
 `;
 
@@ -55,6 +96,10 @@ const Details = styled.div`
   flex-direction: column;
   width: 100%;
   padding: var(--global-rhythm) 0;
+
+  @media (max-width: 430px) {
+    padding-top: 0;
+  }
 `;
 
 const TypesList = styled.ul`
@@ -78,4 +123,12 @@ const TypesList = styled.ul`
   }
 `;
 
-export { Details, DetailView, DetailViewNavigation, ImageContainer, TypesList };
+export {
+  Details,
+  DetailView,
+  NameAndImage,
+  DetailViewNavigation,
+  ImageContainer,
+  TypesList,
+  NavAndDetails,
+};

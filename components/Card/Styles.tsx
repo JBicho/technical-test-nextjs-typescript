@@ -13,4 +13,8 @@ export const StyledCard = styled.div`
   transition:
     transform 0.3s ease-in-out,
     box-shadow 0.3s ease-in-out;
+
+  @media (max-width: 430px), (orientation: landscape) {
+    margin-top: calc(2.7 * var(--global-rhythm));
+  }
 `;
